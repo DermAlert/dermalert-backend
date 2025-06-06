@@ -1,0 +1,26 @@
+# docker-compose.dev.yml
+version: "3.9"
+
+services:
+  dermalert:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - venv:/app/.venv
+    # configuração do Compose File-watch (Docker >= 23.0)
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: ./uv.lock
+
+volumes:
+  venv:
