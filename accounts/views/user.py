@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.select_related("address").all()
+    queryset = User.objects.select_related("address").all().order_by("id")
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
     filter_backends = (filters.DjangoFilterBackend,)

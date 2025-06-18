@@ -14,8 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "cpf",
             "email",
-            "first_name",
-            "last_name",
+            "name",
             "password",
             "address",
         )
@@ -34,8 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
             cpf=validated_data["cpf"],
             defaults={
                 "email": validated_data["email"],
-                "first_name": validated_data["first_name"],
-                "last_name": validated_data["last_name"],
+                "name": validated_data["name"],
                 "password": validated_data["password"],
             },
         )
@@ -43,8 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
         # if user already exists, update the fields
         if not create:
             user.email = validated_data["email"]
-            user.first_name = validated_data["first_name"]
-            user.last_name = validated_data["last_name"]
+            user.name = validated_data["name"]
             user.set_password(validated_data["password"])
             user.save()
 

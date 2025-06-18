@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from core.models import BaseModel
 from dermalert import settings
+from ..managers.user import UserManager
 
 
 class User(AbstractUser, BaseModel):
@@ -22,8 +23,15 @@ class User(AbstractUser, BaseModel):
     # unique=false because people who don't have email and use their relatives'
     email = models.EmailField(_("Email Address"), blank=True, unique=False)
 
-    first_name = models.CharField(_("First Name"), max_length=150, blank=True)
-    last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
+    first_name = None
+    last_name = None
+    name = models.CharField(
+        _("Name"),
+        max_length=255,
+        blank=False,
+        null=False,
+        help_text=_("Full name of the user."),
+    )
 
     address = models.ForeignKey(
         "address.Address",
@@ -34,3 +42,4 @@ class User(AbstractUser, BaseModel):
     )
 
     USERNAME_FIELD = settings.USERNAME_FIELD
+    objects = UserManager()

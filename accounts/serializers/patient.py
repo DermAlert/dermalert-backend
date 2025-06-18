@@ -9,7 +9,7 @@ class NestedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "cpf", "email", "first_name", "last_name")
+        fields = ("id", "cpf", "email", "name")
         extra_kwargs = {
             "cpf": {"required": True},
         }
