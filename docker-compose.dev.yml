@@ -1,7 +1,37 @@
-# docker-compose.dev.yml
-version: "3.9"
-
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: django_db
+      POSTGRES_USER: django_user
+      POSTGRES_PASSWORD: django_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U django_user -d django_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9090"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   dermalert:
     build:
       context: .
@@ -11,7 +41,16 @@ services:
     volumes:
       - .:/app
       - venv:/app/.venv
-    # configuração do Compose File-watch (Docker >= 23.0)
+    environment:
+      - POSTGRES_HOST=postgres
+      - MINIO_ENDPOINT=http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    env_file:
+      - .env
     develop:
       watch:
         - action: sync
@@ -24,3 +63,5 @@ services:
 
 volumes:
   venv:
+  postgres_data:
+  minio_data:

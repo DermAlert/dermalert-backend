@@ -12,12 +12,19 @@ dependencies = [
     "drf-yasg>=1.21.10",
     "pillow>=11.2.1",
     "requests>=2.32.3",
+    "psycopg2-binary>=2.9.9",
+    "django-storages>=1.14.4",
+    "boto3>=1.35.0",
 ]
 
 [dependency-groups]
 dev = [
     "django-debug-toolbar>=5.2.0",
     "ruff>=0.11.4",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.15",
 ]
 prod = [
     "gunicorn>=23.0.0",
@@ -31,4 +38,7 @@ test = [
     "pytest-factoryboy>=2.7.0",
     "pytest-sugar>=1.0.0",
     "pytest-xdist>=3.7.0",
+]
+seed = [
+    "faker>=37.3.0",
 ]
