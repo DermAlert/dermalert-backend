@@ -1,0 +1,2054 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Sistema backend para diagnóstico dermatológico com IA">
+      
+      
+        <meta name="author" content="Giovanni">
+      
+      
+      
+        <link rel="prev" href="../quick-guide/">
+      
+      
+        <link rel="next" href="../technical-summary/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Documentação Completa - DermAlert Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sistema-de-seeds-modularizado-dermalert" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="DermAlert Backend" class="md-header__button md-logo" aria-label="DermAlert Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DermAlert Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Documentação Completa
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartilhar" aria-label="Compartilhar" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DermAlert/dermalert-backend" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dermalert-backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../setup/postgres/" class="md-tabs__link">
+          
+  
+  
+  Configuração
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../quick-guide/" class="md-tabs__link">
+          
+  
+  
+  Seeds
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/accounts/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../development/architecture/" class="md-tabs__link">
+          
+  
+  
+  Desenvolvimento
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DermAlert Backend" class="md-nav__button md-logo" aria-label="DermAlert Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DermAlert Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DermAlert/dermalert-backend" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dermalert-backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Configuração
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Configuração
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/postgres/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PostgreSQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Ambiente de Desenvolvimento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Seeds
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Seeds
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guia Rápido
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Documentação Completa
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentação Completa
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#estrutura-modularizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      📁 Estrutura Modularizada
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📁 Estrutura Modularizada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apps-e-seus-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Apps e seus Seeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comandos-disponiveis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Comandos Disponíveis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Comandos Disponíveis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-seed_all-comando-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. seed_all - Comando Principal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-seeds-individuais-por-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Seeds Individuais por App
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Seeds Individuais por App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enderecos-address-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Endereços (address app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unidades-de-saude-health_unit-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏥 Unidades de Saúde (health_unit app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogos-de-saude-profile_forms-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Catálogos de Saúde (profile_forms app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accounts-accounts-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Accounts (accounts app)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sistema-de-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Sistema de Dependências
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracao-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Configuração Central
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Configuração Central">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coreseed_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      /core/seed_config.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classe-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Classe Base
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Classe Base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coremanagementcommandsbase_seedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      /core/management/commands/base_seed.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-via-makefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Uso via Makefile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dados-gerados" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Dados Gerados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Dados Gerados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enderecos-50-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Endereços (50 por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unidades-de-saude-20-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏥 Unidades de Saúde (20 por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogos-de-saude" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Catálogos de Saúde
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accounts-50-usuarios-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Accounts (50 usuários por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seed-deterministico" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌱 Seed Determinístico
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌱 Seed Determinístico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      Como Funciona
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vantagens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alterando-os-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alterando os Dados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adicionando-novos-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Adicionando Novos Seeds
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Adicionando Novos Seeds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-criar-comando-no-app-apropriado" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Criar comando no app apropriado
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-registrar-no-seed_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Registrar no seed_config.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-usar-automaticamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Usar automaticamente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-em-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Uso em Testes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comando-nao-encontrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Comando não encontrado"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencia-nao-encontrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Dependência não encontrada"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dados-sempre-iguais" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Dados sempre iguais"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-lenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance lenta
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boas-praticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      💡 Boas Práticas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💡 Boas Práticas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#faca" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Faça
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evite" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Evite
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../technical-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resumo Técnico
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Commands Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/accounts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accounts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/health-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Health Units
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/addresses/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Endereços
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Desenvolvimento
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Desenvolvimento
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Arquitetura
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/deploy.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deploy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#estrutura-modularizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      📁 Estrutura Modularizada
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📁 Estrutura Modularizada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apps-e-seus-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Apps e seus Seeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comandos-disponiveis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Comandos Disponíveis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Comandos Disponíveis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-seed_all-comando-principal" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. seed_all - Comando Principal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-seeds-individuais-por-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Seeds Individuais por App
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Seeds Individuais por App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enderecos-address-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Endereços (address app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unidades-de-saude-health_unit-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏥 Unidades de Saúde (health_unit app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogos-de-saude-profile_forms-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Catálogos de Saúde (profile_forms app)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accounts-accounts-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Accounts (accounts app)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sistema-de-dependencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Sistema de Dependências
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracao-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Configuração Central
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Configuração Central">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coreseed_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      /core/seed_config.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classe-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Classe Base
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Classe Base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coremanagementcommandsbase_seedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      /core/management/commands/base_seed.py
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-via-makefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Uso via Makefile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dados-gerados" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Dados Gerados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Dados Gerados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enderecos-50-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Endereços (50 por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unidades-de-saude-20-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏥 Unidades de Saúde (20 por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalogos-de-saude" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Catálogos de Saúde
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accounts-50-usuarios-por-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Accounts (50 usuários por padrão)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seed-deterministico" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌱 Seed Determinístico
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌱 Seed Determinístico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      Como Funciona
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vantagens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alterando-os-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alterando os Dados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adicionando-novos-seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Adicionando Novos Seeds
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Adicionando Novos Seeds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-criar-comando-no-app-apropriado" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Criar comando no app apropriado
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-registrar-no-seed_configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Registrar no seed_config.py
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-usar-automaticamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Usar automaticamente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uso-em-testes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Uso em Testes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comando-nao-encontrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Comando não encontrado"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencia-nao-encontrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Dependência não encontrada"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dados-sempre-iguais" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Dados sempre iguais"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-lenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance lenta
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boas-praticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      💡 Boas Práticas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💡 Boas Práticas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#faca" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Faça
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evite" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ Evite
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="sistema-de-seeds-modularizado-dermalert">🌱 Sistema de Seeds Modularizado - DermAlert</h1>
+<p>Este projeto implementa um sistema de seeds modularizado que segue as melhores práticas do Django, organizando cada responsabilidade em seu próprio app.</p>
+<h2 id="estrutura-modularizada">📁 Estrutura Modularizada</h2>
+<h3 id="apps-e-seus-seeds">🏗️ Apps e seus Seeds</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>core/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── seed_config.py          # Configuração central de todos os seeds
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── management/commands/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── base_seed.py        # Classe base para todos os seeds
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    └── seed_all.py         # Comando principal que executa todos os seeds
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>address/
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── management/commands/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    └── seed_addresses.py   # 📍 Seeds de endereços brasileiros
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>health_unit/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>├── management/commands/
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    └── seed_health_units.py # 🏥 Seeds de unidades de saúde
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>profile_forms/
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>├── management/commands/
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    └── seed_health_catalogs.py # 📋 Catálogos de saúde
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>accounts/
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>├── management/commands/
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    └── seed_accounts.py    # 👥 Usuários, pacientes, trabalhos, sessões
+</code></pre></div>
+<h2 id="comandos-disponiveis">🎯 Comandos Disponíveis</h2>
+<h3 id="1-seed_all-comando-principal">1. <strong><code>seed_all</code></strong> - Comando Principal</h3>
+<p>Executa todos os seeds automaticamente na ordem correta, respeitando dependências.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Seed completo</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Ver seeds disponíveis e ordem de execução</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--list
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Limpar dados existentes e recriar</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--clear
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Executar apenas seeds específicos (dependências incluídas automaticamente)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--only<span class="w"> </span>seed_addresses<span class="w"> </span>seed_health_units
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Pular seeds específicos</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--skip<span class="w"> </span>seed_health_catalogs
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Personalizar quantidades</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--users<span class="w"> </span><span class="m">100</span><span class="w"> </span>--addresses<span class="w"> </span><span class="m">80</span><span class="w"> </span>--health-units<span class="w"> </span><span class="m">15</span>
+</code></pre></div>
+<h3 id="2-seeds-individuais-por-app">2. <strong>Seeds Individuais por App</strong></h3>
+<h4 id="enderecos-address-app">📍 <strong>Endereços</strong> (<code>address</code> app)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_addresses<span class="w"> </span>--count<span class="w"> </span><span class="m">50</span><span class="w"> </span>--clear
+</code></pre></div>
+<h4 id="unidades-de-saude-health_unit-app">🏥 <strong>Unidades de Saúde</strong> (<code>health_unit</code> app)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_health_units<span class="w"> </span>--count<span class="w"> </span><span class="m">20</span><span class="w"> </span>--clear
+</code></pre></div>
+<h4 id="catalogos-de-saude-profile_forms-app">📋 <strong>Catálogos de Saúde</strong> (<code>profile_forms</code> app)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_health_catalogs<span class="w"> </span>--clear
+</code></pre></div>
+<h4 id="accounts-accounts-app">👥 <strong>Accounts</strong> (<code>accounts</code> app)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_accounts<span class="w"> </span>--users<span class="w"> </span><span class="m">100</span><span class="w"> </span>--patients<span class="w"> </span><span class="m">70</span><span class="w"> </span>--works<span class="w"> </span><span class="m">50</span><span class="w"> </span>--sessions<span class="w"> </span><span class="m">30</span><span class="w"> </span>--clear
+</code></pre></div>
+<h2 id="sistema-de-dependencias">🔗 Sistema de Dependências</h2>
+<p>O sistema resolve dependências automaticamente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>seed_addresses (sem dependências)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── seed_health_units (depende de addresses)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>└── seed_accounts (depende de addresses + health_units)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>seed_health_catalogs (sem dependências)
+</code></pre></div>
+<h2 id="configuracao-central">🛠️ Configuração Central</h2>
+<h3 id="coreseed_configpy"><code>/core/seed_config.py</code></h3>
+<p>Arquivo que centraliza toda a configuração dos seeds:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">SEED_COMMANDS</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s1">&#39;seed_addresses&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Endereços&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="mi">10</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="p">},</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="s1">&#39;seed_health_units&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="s1">&#39;health_unit&#39;</span><span class="p">,</span> 
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;seed_addresses&#39;</span><span class="p">],</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Unidades de saúde&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="mi">20</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="p">},</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="c1"># ...</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="classe-base">🏗️ Classe Base</h2>
+<h3 id="coremanagementcommandsbase_seedpy"><code>/core/management/commands/base_seed.py</code></h3>
+<p>Todos os seeds herdam de <code>BaseSeedCommand</code> que fornece:</p>
+<ul>
+<li>✅ Seed determinístico baseado no SECRET_KEY</li>
+<li>✅ Configuração automática do Faker (pt_BR)</li>
+<li>✅ Transações automáticas</li>
+<li>✅ Tratamento de erros padronizado</li>
+<li>✅ Output formatado e colorido</li>
+<li>✅ Argumentos comuns (--clear)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseSeedCommand</span><span class="p">):</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">seed_name</span> <span class="o">=</span> <span class="s2">&quot;meu_seed&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">seed_description</span> <span class="o">=</span> <span class="s2">&quot;Descrição do seed&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fake</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="c1"># Implementar lógica do seed</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;items_criados&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="c1"># Implementar limpeza (opcional)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="k">pass</span>
+</code></pre></div>
+<h2 id="uso-via-makefile">🔧 Uso via Makefile</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Docker</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make<span class="w"> </span>seed<span class="w">              </span><span class="c1"># Seed completo</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make<span class="w"> </span>seed-clear<span class="w">        </span><span class="c1"># Com limpeza</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>make<span class="w"> </span>seed-list<span class="w">         </span><span class="c1"># Listar seeds</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>make<span class="w"> </span>seed-basic<span class="w">        </span><span class="c1"># Apenas dados básicos</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Local</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>make<span class="w"> </span>seed-local<span class="w">        </span><span class="c1"># Seed completo local</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>make<span class="w"> </span>seed-local-clear<span class="w">  </span><span class="c1"># Com limpeza local</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>make<span class="w"> </span>seed-local-list<span class="w">   </span><span class="c1"># Listar seeds local</span>
+</code></pre></div>
+<h2 id="dados-gerados">📊 Dados Gerados</h2>
+<h3 id="enderecos-50-por-padrao">📍 <strong>Endereços</strong> (50 por padrão)</h3>
+<ul>
+<li>CEPs brasileiros válidos</li>
+<li>Estados populosos (SP, RJ, MG, etc.)</li>
+<li>Coordenadas dentro do território brasileiro</li>
+<li>Endereços únicos (CEP + número)</li>
+</ul>
+<h3 id="unidades-de-saude-20-por-padrao">🏥 <strong>Unidades de Saúde</strong> (20 por padrão)</h3>
+<ul>
+<li>Tipos realistas: UBS, ESF, AMA, CAPS, CEO, etc.</li>
+<li>Nomes institucionais brasileiros</li>
+<li>Emails governamentais (.gov.br, .sus.br)</li>
+<li>Vinculadas a endereços únicos</li>
+</ul>
+<h3 id="catalogos-de-saude">📋 <strong>Catálogos de Saúde</strong></h3>
+<ul>
+<li><strong>40 Doenças Crônicas</strong> (diabetes, hipertensão, etc.)</li>
+<li><strong>50 Medicamentos</strong> (paracetamol, insulina, etc.)</li>
+<li><strong>30 Alergias</strong> (leite, amendoim, látex, etc.)</li>
+</ul>
+<h3 id="accounts-50-usuarios-por-padrao">👥 <strong>Accounts</strong> (50 usuários por padrão)</h3>
+<ul>
+<li><strong>Usuários</strong>: CPF válido, nomes brasileiros, emails opcionais</li>
+<li><strong>Pacientes</strong>: Número SUS, telefones, gêneros, datas de nascimento</li>
+<li><strong>Trabalhos</strong>: Relacionamentos usuário-unidade com períodos</li>
+<li><strong>Sessões</strong>: Horários de trabalho realistas (6h-23h)</li>
+</ul>
+<h2 id="seed-deterministico">🌱 Seed Determinístico</h2>
+<h3 id="como-funciona">Como Funciona</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">seed_source</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">seed_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">seed_source</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">seed_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed_hash</span><span class="p">[:</span><span class="mi">8</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="vantagens">Vantagens</h3>
+<ul>
+<li>✅ <strong>Reprodutível</strong>: Mesmos dados sempre</li>
+<li>✅ <strong>Ambiente-específico</strong>: SECRET_KEY diferente = dados diferentes</li>
+<li>✅ <strong>Testável</strong>: Dados consistentes para testes</li>
+<li>✅ <strong>Debugável</strong>: Mesmo cenário sempre</li>
+</ul>
+<h3 id="alterando-os-dados">Alterando os Dados</h3>
+<p>Para gerar dados diferentes, altere o SECRET_KEY:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>DJANGO_SECRET_KEY=nova-chave-para-dados-diferentes
+</code></pre></div></p>
+<h2 id="adicionando-novos-seeds">🚀 Adicionando Novos Seeds</h2>
+<h3 id="1-criar-comando-no-app-apropriado">1. Criar comando no app apropriado</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># meu_app/management/commands/seed_meu_modelo.py</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">core.management.commands.base_seed</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSeedCommand</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseSeedCommand</span><span class="p">):</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">seed_name</span> <span class="o">=</span> <span class="s2">&quot;meu_modelo&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">seed_description</span> <span class="o">=</span> <span class="s2">&quot;Descrição do que faz&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fake</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        <span class="c1"># Implementar lógica</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;criados&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+</code></pre></div>
+<h3 id="2-registrar-no-seed_configpy">2. Registrar no seed_config.py</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">SEED_COMMANDS</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="c1"># ...seeds existentes...</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="s1">&#39;seed_meu_modelo&#39;</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="s1">&#39;meu_app&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;seed_addresses&#39;</span><span class="p">],</span>  <span class="c1"># se necessário</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Meu modelo&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="mi">50</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="p">}</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="3-usar-automaticamente">3. Usar automaticamente</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>uv<span class="w"> </span>run<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w">  </span><span class="c1"># Inclui o novo seed automaticamente</span>
+</code></pre></div>
+<h2 id="uso-em-testes">🧪 Uso em Testes</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># conftest.py</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management</span><span class="w"> </span><span class="kn">import</span> <span class="n">call_command</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">seeded_data</span><span class="p">():</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;seed_all&#39;</span><span class="p">,</span> <span class="s1">&#39;--users&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="s1">&#39;--addresses&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_com_dados</span><span class="p">(</span><span class="n">seeded_data</span><span class="p">):</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="c1"># Teste com dados seedados</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="troubleshooting">🔧 Troubleshooting</h2>
+<h3 id="comando-nao-encontrado">"Comando não encontrado"</h3>
+<ul>
+<li>Verifique se o app está em <code>INSTALLED_APPS</code></li>
+<li>Confirme que <code>management/commands/</code> existe com <code>__init__.py</code></li>
+</ul>
+<h3 id="dependencia-nao-encontrada">"Dependência não encontrada"</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>manage.py<span class="w"> </span>seed_all<span class="w"> </span>--list<span class="w">  </span><span class="c1"># Ver ordem de execução</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>python<span class="w"> </span>manage.py<span class="w"> </span>seed_addresses<span class="w">  </span><span class="c1"># Executar dependência primeiro</span>
+</code></pre></div>
+<h3 id="dados-sempre-iguais">"Dados sempre iguais"</h3>
+<ul>
+<li>Isso é esperado! Para dados diferentes, altere o SECRET_KEY</li>
+</ul>
+<h3 id="performance-lenta">Performance lenta</h3>
+<ul>
+<li>Use quantidades menores: <code>--users 10 --addresses 5</code></li>
+<li>Execute seeds individuais conforme necessário</li>
+</ul>
+<h2 id="boas-praticas">💡 Boas Práticas</h2>
+<h3 id="faca">✅ <strong>Faça</strong></h3>
+<ul>
+<li>Herde sempre de <code>BaseSeedCommand</code></li>
+<li>Use dependências para ordem correta</li>
+<li>Implemente <code>_clear_data</code> se suportar limpeza</li>
+<li>Trate erros graciosamente</li>
+<li>Use bulk_create para performance</li>
+</ul>
+<h3 id="evite">❌ <strong>Evite</strong></h3>
+<ul>
+<li>Seeds em produção sem cuidado extremo</li>
+<li>Dependências circulares</li>
+<li>Hardcoding de IDs ou PKs</li>
+<li>Seeds muito lentos (use quantidades razoáveis)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>
