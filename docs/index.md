@@ -1,6 +1,6 @@
 # DermAlert Backend
 
-![DermAlert Logo](https://via.placeholder.com/300x100/1976D2/FFFFFF?text=DermAlert)
+![DermAlert Logo](https://www.dermalert.ai/land/dist/logo-dermalert.png)
 
 Bem-vindo à documentação do **DermAlert Backend** - um sistema backend robusto para diagnóstico dermatológico assistido por IA.
 
