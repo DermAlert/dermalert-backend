@@ -17,13 +17,14 @@ class NestedUserSerializer(serializers.ModelSerializer):
 
 class PatientSerializer(serializers.ModelSerializer):
     user = NestedUserSerializer()
-
+    
     class Meta:
         model = Patient
         fields = [
             "sus_number",
             "phone_number",
             "gender",
+            "other_gender",
             "date_of_birth",
             "user",
         ]
