@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "debug_toolbar",
     "drf_yasg",
+    "storages",
 ]
 
 DJANGO_APPS = [
@@ -156,31 +157,61 @@ USE_I18N = True
 
 USE_TZ = True
 
+AWS_ACCESS_KEY_ID       = os.getenv("AWS_ACCESS_KEY_ID", "minioadmin")
+AWS_SECRET_ACCESS_KEY   = os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
+AWS_S3_ENDPOINT_URL     = os.getenv("AWS_S3_ENDPOINT_URL", "http://minio:9000")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "dermalert")
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+AWS_S3_REGION_NAME      = os.getenv("AWS_S3_REGION_NAME", "us-east-1")
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_S3_URL_PROTOCOL     = os.getenv("AWS_S3_URL_PROTOCOL", "http:")
+AWS_S3_CUSTOM_DOMAIN    = os.getenv("AWS_S3_CUSTOM_DOMAIN", "localhost:9000")
+AWS_QUERYSTRING_AUTH    = False
+AWS_DEFAULT_ACL         = "public-read"
 
-STATIC_URL = "/static/"
+STATIC_URL  = f"{AWS_STORAGE_BUCKET_NAME}/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+COMMON_S3_OPTS = {
+    "bucket_name":      AWS_STORAGE_BUCKET_NAME,
+    "endpoint_url":     AWS_S3_ENDPOINT_URL,
+    "access_key":       AWS_ACCESS_KEY_ID,
+    "secret_key":       AWS_SECRET_ACCESS_KEY,
+    "region_name":      AWS_S3_REGION_NAME,
+    "addressing_style": AWS_S3_ADDRESSING_STYLE,
+    "querystring_auth": AWS_QUERYSTRING_AUTH,
+    "default_acl":      AWS_DEFAULT_ACL,
+}
 
-# Configuração adicional para produção
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            **COMMON_S3_OPTS,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            **COMMON_S3_OPTS,
+            "location": STATIC_URL,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            "url_protocol": AWS_S3_URL_PROTOCOL,
+        },
+    },
+}
+
+
 if not DEBUG:
-    # Configurações de segurança para produção
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    
-    # Configuração para HTTPS (descomente se usar HTTPS)
-    # SECURE_SSL_REDIRECT = True
-    # SESSION_COOKIE_SECURE = True
-    # CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -204,21 +235,3 @@ USERNAME_FIELD = "cpf"
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = []
 
-# Minio settings
-
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-MINIO_ACCESS_KEY = os.getenv("MINIO_ROOT_USER", "minioadmin")
-MINIO_SECRET_KEY = os.getenv("MINIO_ROOT_PASSWORD", "minioadmin")
-MINIO_BUCKET_NAME = os.getenv("MINIO_BUCKET_NAME", "dermalert")
-MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
-
-AWS_ACCESS_KEY_ID = MINIO_ACCESS_KEY
-AWS_SECRET_ACCESS_KEY = MINIO_SECRET_KEY
-AWS_STORAGE_BUCKET_NAME = MINIO_BUCKET_NAME
-AWS_S3_ENDPOINT_URL = MINIO_ENDPOINT
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = True
-AWS_S3_FILE_OVERWRITE = False
-
-SWAGGER_USE_COMPAT_RENDERERS = False

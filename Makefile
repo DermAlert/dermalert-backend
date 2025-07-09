@@ -15,16 +15,20 @@ down:
 
 # Configurar banco de dados (desenvolvimento)
 setup-db:
-	docker compose -f docker-compose.dev.yml exec dermalert python manage.py migrate
-	docker compose -f docker-compose.dev.yml exec dermalert python manage.py collectstatic --noinput
+	docker compose -f docker-compose.dev.yml exec dermalert \
+	    uv run manage.py migrate
+	docker compose -f docker-compose.dev.yml exec dermalert \
+	    uv run manage.py collectstatic --noinput
+	docker compose -f docker-compose.dev.yml exec dermalert \
+	    uv run manage.py setup_minio
 
 # Executar migrações
 migrate:
-	docker compose -f docker-compose.dev.yml exec dermalert python manage.py migrate
+	docker compose -f docker-compose.dev.yml exec dermalert uv run manage.py migrate
 
 # Shell do Django
 shell:
-	docker compose -f docker-compose.dev.yml exec dermalert python manage.py shell
+	docker compose -f docker-compose.dev.yml exec dermalert uv run manage.py shell
 
 # Conectar ao PostgreSQL
 db-shell:
@@ -45,36 +49,36 @@ lint:
 
 seed:
 	docker compose -f docker-compose.dev.yml run --rm --remove-orphans dermalert \
-	  sh -c "uv sync --group seed --locked && uv run python manage.py migrate && uv run python manage.py seed_all"
+	  sh -c "uv sync --group seed --locked && uv run uv run manage.py migrate && uv run uv run manage.py seed_all"
 
 seed-clear:
 	docker compose -f docker-compose.dev.yml run --rm --remove-orphans dermalert \
-	  sh -c "uv run python manage.py seed_all --clear"
+	  sh -c "uv run uv run manage.py seed_all --clear"
 
 seed-list:
 	docker compose -f docker-compose.dev.yml run --rm --remove-orphans dermalert \
-	  sh -c "uv run python manage.py seed_all --list"
+	  sh -c "uv run uv run manage.py seed_all --list"
 
 seed-basic:
 	docker compose -f docker-compose.dev.yml run --rm --remove-orphans dermalert \
-	  sh -c "uv run python manage.py seed_all --only seed_addresses seed_health_units"
+	  sh -c "uv run uv run manage.py seed_all --only seed_addresses seed_health_units"
 
 seed-minimal:
 	docker compose -f docker-compose.dev.yml run --rm --remove-orphans dermalert \
-	  sh -c "uv run python manage.py seed_all --clear --users 5 --addresses 10 --health-units 2"
+	  sh -c "uv run uv run manage.py seed_all --clear --users 5 --addresses 10 --health-units 2"
 
 # Seed local (sem Docker)
 seed-local:
-	python manage.py migrate && python manage.py seed_all
+	uv run manage.py migrate && uv run manage.py seed_all
 
 seed-local-clear:
-	python manage.py seed_all --clear
+	uv run manage.py seed_all --clear
 
 seed-local-list:
-	python manage.py seed_all --list
+	uv run manage.py seed_all --list
 
 seed-local-minimal:
-	python manage.py seed_all --clear --users 5 --addresses 10 --health-units 2
+	uv run manage.py seed_all --clear --users 5 --addresses 10 --health-units 2
 
 # Script de seeds utilitário
 seed-setup:
