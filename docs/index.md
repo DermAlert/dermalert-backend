@@ -28,8 +28,9 @@ O projeto é construído com:
 
 ### Primeiros Passos
 1. [Configuração do PostgreSQL](setup/postgres.md)
-2. [Ambiente de Desenvolvimento](setup/development.md)
-3. [Guia Rápido de Seeds](seeds/quick-guide.md)
+2. [Configuração do MinIO](setup/minio.md)
+3. [Ambiente de Desenvolvimento](setup/development.md)
+4. [Guia Rápido de Seeds](seeds/quick-guide.md)
 
 ### Para Desenvolvedores
 - [Arquitetura do Sistema](development/architecture.md)
@@ -65,7 +66,8 @@ make seed
 
 ## 📖 Estrutura da Documentação
 
-- **[Configuração](setup/postgres.md)** - Setup do ambiente
+- **[PostgreSQL](setup/postgres.md)** - Configuração do banco de dados
+- **[MinIO](setup/minio.md)** - Configuração do armazenamento de objetos
 - **[Seeds](seeds/quick-guide.md)** - Sistema de dados de teste
 - **[API](api/accounts.md)** - Documentação das APIs
 - **[Desenvolvimento](development/architecture.md)** - Guias para desenvolvedores

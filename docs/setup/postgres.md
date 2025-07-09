@@ -140,7 +140,7 @@ docker compose -f docker-compose.dev.yml exec postgres psql -U django_user djang
 ## 🌐 URLs Importantes
 
 - **Django Admin**: http://localhost:8000/admin/
-- **API Docs**: http://localhost:8000/swagger/
+- **API Docs**: http://localhost:8000/api/
 - **MinIO Console**: http://localhost:9090/
 - **PostgreSQL**: `localhost:5432` (apenas desenvolvimento)
 

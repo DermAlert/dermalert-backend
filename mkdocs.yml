@@ -51,6 +51,7 @@ nav:
   - Home: index.md
   - Configuração:
     - PostgreSQL: setup/postgres.md
+    - MinIO: setup/minio.md
     - Ambiente de Desenvolvimento: setup/development.md
   - Seeds:
     - Guia Rápido: seeds/quick-guide.md
