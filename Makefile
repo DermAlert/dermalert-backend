@@ -2,7 +2,10 @@
 
 # Desenvolvimento
 dev:
-	docker compose -f docker-compose.dev.yml up --build --remove-orphans
+	docker compose -f docker-compose.dev.yml up --remove-orphans
+
+build-dev:
+	docker compose -f docker-compose.dev.yml --build
 
 # Produção
 prod:
@@ -18,9 +21,9 @@ setup-db:
 	docker compose -f docker-compose.dev.yml exec dermalert \
 	    uv run manage.py migrate
 	docker compose -f docker-compose.dev.yml exec dermalert \
-	    uv run manage.py collectstatic --noinput
-	docker compose -f docker-compose.dev.yml exec dermalert \
 	    uv run manage.py setup_minio
+	docker compose -f docker-compose.dev.yml exec dermalert \
+	    uv run manage.py collectstatic --noinput
 
 # Executar migrações
 migrate:
