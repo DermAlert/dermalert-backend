@@ -7,7 +7,7 @@ def fetch_address_from_cep(cep: str) -> dict:
     """
     Retorna um dicionário com os campos do Address ou lança ValueError
     """
-    resp = requests.get(VIACEP_URL.format(cep=cep), timeout=5)
+    resp = requests.get(VIACEP_URL.format(cep=cep), timeout=3)
     resp.raise_for_status()
     data = resp.json()
     if data.get("erro"):

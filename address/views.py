@@ -17,7 +17,7 @@ class AddressViewSet(ModelViewSet):
     permission_classes = [AllowAny]
     filter_backends = ()
 
-    @action(detail=False, methods=["post"], url_path="cep-lookup")
+    @action(detail=False, methods=["post"], url_path="cep-lookup", serializer_class=CepRequestSerializer)
     def cep_lookup(self, request):
         lookup = CepRequestSerializer(data=request.data)
         lookup.is_valid(raise_exception=True)
