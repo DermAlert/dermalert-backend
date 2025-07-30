@@ -1,7 +1,6 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 from accounts.serializers.patient import PatientSerializer
 from accounts.models import Patient
-from django_filters import rest_framework as filters
 
 
 class PatientViewSet(viewsets.ModelViewSet):
@@ -12,4 +11,7 @@ class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['user__name', 'user__cpf', 'sus_number']
+    ordering_fields = ['user__name', 'date_of_birth', 'created_at']
+    ordering = ['user__name']
