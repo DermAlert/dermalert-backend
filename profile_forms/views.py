@@ -45,15 +45,18 @@ class AllergyListView(generics.ListAPIView):
     serializer_class = AllergySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    pagination_class = None
 
 class MedicineListView(generics.ListAPIView):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    pagination_class = None
 
 class ChronicDiseaseListView(generics.ListAPIView):
     queryset = ChronicDisease.objects.all()
     serializer_class = ChronicDiseaseSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    pagination_class = None
