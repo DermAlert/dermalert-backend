@@ -179,11 +179,11 @@ class Command(BaseSeedCommand):
         patients = []
         for user in selected_users:
             # Gerar número SUS único
-            sus_number = str(fake.random_int(min=10000000000, max=99999999999))
+            sus_number = str(fake.random_int(min=100_000_000_000_000, max=999_999_999_999_999))
             max_attempts = 10
             attempts = 0
             while Patient.objects.filter(sus_number=sus_number).exists() and attempts < max_attempts:
-                sus_number = str(fake.random_int(min=10000000000, max=99999999999))
+                sus_number = str(fake.random_int(min=100_000_000_000_000, max=999_999_999_999_999))
                 attempts += 1
             
             if attempts >= max_attempts:

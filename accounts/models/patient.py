@@ -11,7 +11,7 @@ class Patient(BaseModel):
         related_name="patient_profile",
         primary_key=True,
     )
-    sus_number = models.CharField(max_length=11, unique=True)
+    sus_number = models.CharField(max_length=15, unique=True)
     phone_number = models.CharField(max_length=15)
     gender = models.CharField(
         max_length=1, choices=Gender.choices, default=Gender.NOT_INFORMED
