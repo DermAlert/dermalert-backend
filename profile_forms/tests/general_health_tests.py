@@ -91,6 +91,79 @@ class TestGeneralHealthAPI:
         resp = api_client.post(url, data=data, format='json')
         assert resp.status_code == 201
         assert len(resp.data["allergies"]) == 2
+    
+    def test_create_with_all_fields(self, api_client: APIClient, user_factory: UserFactory):
+        user = user_factory.create()
+        url = reverse("patient-general-health-list", kwargs={"user_pk": user.id})
+
+        data = {
+            "surgeries": "Knee replacement",
+            "physical_activity_frequency": PhysicalActivityFrequency.OCCASIONALLY,
+            "chronic_diseases": [
+                {"name": "Diabetes"},
+                {"name": "Hypertension"}
+            ],
+            "medicines": [
+                {"name": "Aspirin"},
+                {"name": "Metformin"}
+            ],
+            "allergies": [
+                {"name": "Peanuts"},
+                {"name": "Shellfish"}
+            ]
+        }
+
+        resp = api_client.post(url, data=data, format='json')
+        assert resp.status_code == 201
+        assert len(resp.data["chronic_diseases"]) == 2
+        assert len(resp.data["medicines"]) == 2
+        assert len(resp.data["allergies"]) == 2
+    
+    def test_create_with_empty_fields(self, api_client: APIClient, user_factory: UserFactory):
+        user = user_factory.create()
+        url = reverse("patient-general-health-list", kwargs={"user_pk": user.id})
+
+        data = {
+            "surgeries": "",
+            "physical_activity_frequency": PhysicalActivityFrequency.NEVER,
+            "chronic_diseases": [],
+            "medicines": [],
+            "allergies": []
+        }
+
+        resp = api_client.post(url, data=data, format='json')
+        assert resp.status_code == 201
+        assert len(resp.data["chronic_diseases"]) == 0
+        assert len(resp.data["medicines"]) == 0
+        assert len(resp.data["allergies"]) == 0
+
+    def test_create_with_existing_data(self, api_client: APIClient, user_factory: UserFactory):
+        user = user_factory.create()
+        medicine = MedicineFactory.create(name="Aspirin")
+        allergy = AllergyFactory.create(name="Peanuts")
+        chronic_disease = ChronicDiseaseFactory.create(name="Diabetes")
+
+        url = reverse("patient-general-health-list", kwargs={"user_pk": user.id})
+
+        data = {
+            "surgeries": "Knee replacement",
+            "physical_activity_frequency": PhysicalActivityFrequency.OCCASIONALLY,
+            "chronic_diseases": [
+                {"name": chronic_disease.name}
+            ],
+            "medicines": [
+                {"name": medicine.name}
+            ],
+            "allergies": [
+                {"name": allergy.name}
+            ]
+        }
+
+        resp = api_client.post(url, data=data, format='json')
+        assert resp.status_code == 201
+        assert len(resp.data["chronic_diseases"]) == 1
+        assert len(resp.data["medicines"]) == 1
+        assert len(resp.data["allergies"]) == 1
 
     def test_retrieve(self, api_client: APIClient, general_health_factory: GeneralHealthFactory):
         general_health = general_health_factory.create()
