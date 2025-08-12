@@ -5,7 +5,7 @@ from profile_forms.models import ChronicDisease, Medicine, Allergy
 class ChronicDiseaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChronicDisease
-        fields = ("id", "name")  # id é útil nas respostas
+        fields = ("id", "name")
 
 
 class MedicineSerializer(serializers.ModelSerializer):

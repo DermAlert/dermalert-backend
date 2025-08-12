@@ -30,14 +30,18 @@ class GeneralHealthSingletonViewSet(
         serializer = self.get_serializer(obj)
         return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        id = self.kwargs["user_pk"]
-        user = get_object_or_404(get_user_model(), id=id)
-
-        # impede duplicidade
+    def create(self, request, *args, **kwargs):
+        # Valida usuário e duplicidade antes de serializer.is_valid para evitar erros de unique nos nested
+        user_id = self.kwargs.get("user_pk")
+        user = get_object_or_404(get_user_model(), id=user_id)
         if GeneralHealth.objects.filter(user=user).exists():
             raise PermissionDenied("Já existe um formulário para esse CPF.")
 
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        id = self.kwargs["user_pk"]
+        user = get_object_or_404(get_user_model(), id=id)
         serializer.save(user=user)
 
 class AllergyListView(generics.ListAPIView):

@@ -118,6 +118,42 @@ class TestGeneralHealthAPI:
         resp = api_client.post(url, data=data, format='json')
         assert resp.status_code == 403
         assert "Já existe um formulário para esse CPF" in str(resp.data)
+    
+    def test_create_duplicate_for_same_user_with_data(self, api_client: APIClient, general_health_factory: GeneralHealthFactory):
+        general_health = general_health_factory.create()
+        url = reverse("patient-general-health-list", kwargs={"user_pk": general_health.user.id})
+        
+        data = {
+            "surgeries": "Another surgery",
+            "physical_activity_frequency": PhysicalActivityFrequency.DAILY,
+            "chronic_diseases": [ {"name": "TestDiabetes"} ],
+            "medicines": [ {"name": "TestAspirin"} ],
+            "allergies": [ {"name": "TestPeanuts"} ]
+        }
+        
+        resp = api_client.post(url, data=data, format='json')
+        assert resp.status_code == 403
+        assert "Já existe um formulário para esse CPF" in str(resp.data)
+    
+    def test_create_duplicate_for_same_user_with_data_existent(self, api_client: APIClient, general_health_factory: GeneralHealthFactory):
+        general_health = general_health_factory.create()
+        chronic_disease = ChronicDiseaseFactory.create(name="TestDiabetes")
+        medicine = MedicineFactory.create(name="TestAspirin")
+        allergy = AllergyFactory.create(name="TestPeanuts")
+
+        url = reverse("patient-general-health-list", kwargs={"user_pk": general_health.user.id})
+
+        data = {
+            "surgeries": "Another surgery",
+            "physical_activity_frequency": PhysicalActivityFrequency.DAILY,
+            "chronic_diseases": [ {"name": chronic_disease.name} ],
+            "medicines": [ {"name": medicine.name} ],
+            "allergies": [ {"name": allergy.name} ]
+        }
+
+        resp = api_client.post(url, data=data, format='json')
+        assert resp.status_code == 403
+        assert "Já existe um formulário para esse CPF" in str(resp.data)
 
     def test_create_with_nonexistent_user(self, api_client: APIClient):
         url = reverse("patient-general-health-list", kwargs={"user_pk": 99999})

@@ -25,7 +25,7 @@ class TestChronicDiseaseAPI:
         url = reverse("chronic-disease-list")
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 3
+        assert len(resp.data) == 3
 
     def test_search_by_name(self, api_client: APIClient, chronic_disease_factory: ChronicDiseaseFactory):
         diabetes = chronic_disease_factory.create(name="TestDiabetes")
@@ -35,8 +35,8 @@ class TestChronicDiseaseAPI:
         url = f"{reverse('chronic-disease-list')}?search=TestDiabetes"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 1
-        assert resp.data["results"][0]["name"] == diabetes.name
+        assert len(resp.data) == 1
+        assert resp.data[0]["name"] == diabetes.name
 
     def test_search_partial_match(self, api_client: APIClient, chronic_disease_factory: ChronicDiseaseFactory):
         chronic_disease_factory.create(name="TestType1Diabetes")
@@ -46,14 +46,14 @@ class TestChronicDiseaseAPI:
         url = f"{reverse('chronic-disease-list')}?search=TestType"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 2
+        assert len(resp.data) == 2
 
     def test_empty_search(self, api_client: APIClient, chronic_disease_factory: ChronicDiseaseFactory):
         chronic_disease_factory.create_batch(5)
         url = f"{reverse('chronic-disease-list')}?search="
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 5
+        assert len(resp.data) == 5
 
 @pytest.mark.django_db(transaction=True)
 class TestMedicineAPI:
@@ -70,7 +70,7 @@ class TestMedicineAPI:
         url = reverse("medicine-list")
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 4
+        assert len(resp.data) == 4
 
     def test_search_by_name(self, api_client: APIClient, medicine_factory: MedicineFactory):
         aspirin = medicine_factory.create(name="TestAspirin")
@@ -80,8 +80,8 @@ class TestMedicineAPI:
         url = f"{reverse('medicine-list')}?search=TestAspirin"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 1
-        assert resp.data["results"][0]["name"] == aspirin.name
+        assert len(resp.data) == 1
+        assert resp.data[0]["name"] == aspirin.name
 
     def test_search_case_insensitive(self, api_client: APIClient, medicine_factory: MedicineFactory):
         medicine_factory.create(name="TestMetformin")
@@ -90,14 +90,14 @@ class TestMedicineAPI:
         url = f"{reverse('medicine-list')}?search=testmetformin"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 1
+        assert len(resp.data) == 1
 
     def test_no_results_search(self, api_client: APIClient, medicine_factory: MedicineFactory):
         medicine_factory.create_batch(3)
         url = f"{reverse('medicine-list')}?search=nonexistent"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 0
+        assert len(resp.data) == 0
 
 @pytest.mark.django_db(transaction=True)
 class TestAllergyAPI:
@@ -114,7 +114,7 @@ class TestAllergyAPI:
         url = reverse("allergy-list")
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 2
+        assert len(resp.data) == 2
 
     def test_search_by_name(self, api_client: APIClient, allergy_factory: AllergyFactory):
         peanuts = allergy_factory.create(name="TestPeanuts")
@@ -124,8 +124,8 @@ class TestAllergyAPI:
         url = f"{reverse('allergy-list')}?search=TestPeanuts"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 1
-        assert resp.data["results"][0]["name"] == peanuts.name
+        assert len(resp.data) == 1
+        assert resp.data[0]["name"] == peanuts.name
 
     def test_search_multiple_results(self, api_client: APIClient, allergy_factory: AllergyFactory):
         allergy_factory.create(name="TestTreeNuts")
@@ -135,7 +135,7 @@ class TestAllergyAPI:
         url = f"{reverse('allergy-list')}?search=Nuts"
         resp = api_client.get(url)
         assert resp.status_code == 200
-        assert len(resp.data["results"]) == 2
+        assert len(resp.data) == 2
 
     def test_ordered_results(self, api_client: APIClient, allergy_factory: AllergyFactory):
         # Create allergies in random order
@@ -147,7 +147,7 @@ class TestAllergyAPI:
         resp = api_client.get(url)
         assert resp.status_code == 200
         # Should be ordered alphabetically by name
-        names = [item["name"] for item in resp.data["results"]]
+        names = [item["name"] for item in resp.data]
         assert names == sorted(names)
 
 @pytest.mark.django_db(transaction=True)
