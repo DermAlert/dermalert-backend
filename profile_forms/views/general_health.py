@@ -5,8 +5,8 @@ from rest_framework.exceptions import PermissionDenied
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 
-from .models import GeneralHealth, Allergy, Medicine, ChronicDisease
-from .serializers import GeneralHealthSerializer, AllergySerializer, MedicineSerializer, ChronicDiseaseSerializer
+from profile_forms.models import GeneralHealth, Allergy, Medicine, ChronicDisease
+from profile_forms.serializers import GeneralHealthSerializer, AllergySerializer, MedicineSerializer, ChronicDiseaseSerializer
 
 
 class GeneralHealthSingletonViewSet(
