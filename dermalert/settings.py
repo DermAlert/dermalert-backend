@@ -166,11 +166,13 @@ AWS_S3_REGION_NAME      = os.getenv("AWS_S3_REGION_NAME", "us-east-1")
 AWS_S3_ADDRESSING_STYLE = "path"
 AWS_S3_URL_PROTOCOL     = os.getenv("AWS_S3_URL_PROTOCOL", "http:")
 AWS_S3_CUSTOM_DOMAIN    = os.getenv("AWS_S3_CUSTOM_DOMAIN", "localhost:9000")
+AWS_LOCATION            = os.getenv("AWS_LOCATION", "static")
 AWS_QUERYSTRING_AUTH    = False
 AWS_DEFAULT_ACL         = "public-read"
 
-STATIC_URL  = f"{AWS_STORAGE_BUCKET_NAME}/static/"
+STATIC_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_CUSTOM_DOMAIN = f"{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}"
 
 COMMON_S3_OPTS = {
     "bucket_name":      AWS_STORAGE_BUCKET_NAME,
@@ -194,8 +196,8 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             **COMMON_S3_OPTS,
-            "location": STATIC_URL,
-            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            "location": AWS_LOCATION,
+            "custom_domain": STATIC_CUSTOM_DOMAIN,
             "url_protocol": AWS_S3_URL_PROTOCOL,
         },
     },
