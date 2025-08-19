@@ -3,7 +3,17 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from accounts.views import UserViewSet, PatientViewSet
 from address.views import AddressViewSet
-from profile_forms.views import GeneralHealthSingletonViewSet, AllergyListView, MedicineListView, ChronicDiseaseListView
+from profile_forms.views import (
+    GeneralHealthSingletonViewSet, 
+    AllergyListView, 
+    MedicineListView, 
+    ChronicDiseaseListView,
+    FamilyHistorySingletonViewSet,
+    ParentsListView,
+    CancerTypeListView,
+    InjuriesTreatmentListView
+)
+
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from rest_framework.routers import DefaultRouter
@@ -37,6 +47,11 @@ patient_router.register(
     GeneralHealthSingletonViewSet,
     basename="patient-general-health",
 )
+patient_router.register(
+    r"forms/family-history",
+    FamilyHistorySingletonViewSet,
+    basename="patient-family-history",
+)
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/", permanent=False)),
@@ -47,6 +62,9 @@ urlpatterns = [
     path("api/v1/allergies/", AllergyListView.as_view(), name="allergy-list"),
     path("api/v1/medicines/", MedicineListView.as_view(), name="medicine-list"),
     path("api/v1/chronic-diseases/", ChronicDiseaseListView.as_view(), name="chronic-disease-list"),
+    path("api/v1/parents/", ParentsListView.as_view(), name="parents-list"),
+    path("api/v1/cancer-types/", CancerTypeListView.as_view(), name="cancer-type-list"),
+    path("api/v1/injuries-treatments/", InjuriesTreatmentListView.as_view(), name="injuries-treatment-list"),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('api/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
