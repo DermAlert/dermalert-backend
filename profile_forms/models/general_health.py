@@ -1,4 +1,4 @@
-from core.models import BaseModel
+from core.models import BaseListedItem
 from profile_forms.models.base_form import BaseForm
 from profile_forms.enums.general_health import PhysicalActivityFrequency
 from django.db import models
@@ -43,24 +43,13 @@ class GeneralHealth(BaseForm):
         return f"General health – {self.user}"
 
 
-class _BaseListedItem(BaseModel):
-    name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        abstract = True
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.name
-
-
-class ChronicDisease(_BaseListedItem):
+class ChronicDisease(BaseListedItem):
     pass
 
 
-class Medicine(_BaseListedItem):
+class Medicine(BaseListedItem):
     pass
 
 
-class Allergy(_BaseListedItem):
+class Allergy(BaseListedItem):
     pass
