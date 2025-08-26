@@ -1,5 +1,6 @@
 from .general_health import GeneralHealthSerializer
 from .clinical_history import ClinicalHistorySerializer
+from .lifestyle_risk import LifestyleRiskSerializer
 from .phototype import PhototypeSerializer
 from .risk_protective_factors import RiskProtectiveFactorsSerializer
 from .cancer_research import CancerResearchSerializer

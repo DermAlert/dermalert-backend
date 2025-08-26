@@ -16,6 +16,7 @@ from profile_forms.views import (
     RiskProtectiveFactorsSingletonViewSet,
     CancerResearchSingletonViewSet,
     ClinicalHistorySingletonViewSet,
+    LifestyleRiskSingletonViewSet,
 )
 
 from debug_toolbar.toolbar import debug_toolbar_urls
@@ -75,6 +76,11 @@ patient_router.register(
     r"forms/clinical-history",
     ClinicalHistorySingletonViewSet,
     basename="patient-clinical-history",
+)
+patient_router.register(
+    r"forms/lifestyle-risk",
+    LifestyleRiskSingletonViewSet,
+    basename="patient-lifestyle-risk",
 )
 
 urlpatterns = [

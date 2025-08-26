@@ -15,3 +15,4 @@ from .phototype import PhototypeSingletonViewSet
 from .risk_protective_factors import RiskProtectiveFactorsSingletonViewSet
 from .cancer_research import CancerResearchSingletonViewSet
 from .clinical_history import ClinicalHistorySingletonViewSet
+from .lifestyle_risk import LifestyleRiskSingletonViewSet

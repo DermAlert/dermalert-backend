@@ -10,6 +10,7 @@ from profile_forms.models import (
     RiskProtectiveFactors,
     CancerResearch,
     ClinicalHistory,
+    LifestyleRisk,
 )
 from profile_forms.enums.phototype import (
     SkinColor,
@@ -28,6 +29,11 @@ from profile_forms.enums.risk_protective_factors import (
 )
 from profile_forms.enums.cancer_research import HowLong
 from profile_forms.enums.clinical_history import YesNoUnknown, CompressionStockingsUse
+from profile_forms.enums.lifestyle_risk import (
+    LongPeriodsPosture,
+    YesNo,
+    SmokingStatus,
+)
 
 
 def clear_str(value: str) -> str:
@@ -216,4 +222,24 @@ class ClinicalHistoryFactory(factory.django.DjangoModelFactory):
     compression_stockings_use = factory.Faker(
         "random_element",
         elements=[value for value, _ in CompressionStockingsUse.choices],
+    )
+
+
+class LifestyleRiskFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = LifestyleRisk
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+    long_periods_posture = factory.Faker(
+        "random_element", elements=[value for value, _ in LongPeriodsPosture.choices]
+    )
+    leg_foot_trauma = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNo.choices]
+    )
+    smoking = factory.Faker(
+        "random_element", elements=[value for value, _ in SmokingStatus.choices]
+    )
+    physical_activity = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNo.choices]
     )
