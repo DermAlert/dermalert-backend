@@ -17,7 +17,7 @@ class NestedUserSerializer(serializers.ModelSerializer):
 
 class PatientSerializer(serializers.ModelSerializer):
     user = NestedUserSerializer()
-    
+
     class Meta:
         model = Patient
         fields = [
@@ -38,7 +38,9 @@ class PatientSerializer(serializers.ModelSerializer):
         except:
             pass
         if not user:
-            user_data["password"] = "12345678"  # Default password, should be changed later
+            user_data["password"] = (
+                "12345678"  # Default password, should be changed later
+            )
             user_serializer = UserSerializer(data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user = user_serializer.save()

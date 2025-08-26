@@ -75,7 +75,9 @@ class Command(BaseSeedCommand):
     def handle_seed(self, fake, *args, **options):  # noqa: ARG002
         relatives = self._bulk_seed(Relatives, PARENTS, "Parentes")
         cancer_types = self._bulk_seed(CancerTypes, CANCER_TYPES, "Tipos de câncer")
-        treatments = self._bulk_seed(InjuriesTreatment, INJURIES_TREATMENTS, "Tratamentos de lesões")
+        treatments = self._bulk_seed(
+            InjuriesTreatment, INJURIES_TREATMENTS, "Tratamentos de lesões"
+        )
         return {
             "relatives": relatives,
             "cancer_types": cancer_types,

@@ -28,6 +28,7 @@ class FamilyHistorySingletonViewSet(
     POST /patients/{user_pk}/profile-forms/family-history/   -> cria
     GET  /patients/{user_pk}/profile-forms/family-history/   -> detalhe (singleton)
     """
+
     serializer_class = FamilyHistorySerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
@@ -53,7 +54,6 @@ class FamilyHistorySingletonViewSet(
         user_id = self.kwargs["user_pk"]
         user = get_object_or_404(get_user_model(), id=user_id)
         serializer.save(user=user)
-
 
 
 class RelativesListView(generics.ListAPIView):

@@ -13,9 +13,11 @@ from profile_forms.enums.phototype import (
     SunSensitivityFace,
 )
 
+
 def clear_str(value: str) -> str:
     """Remove non-numeric characters from string."""
-    return ''.join(filter(lambda x: x.isdigit(), value))
+    return "".join(filter(lambda x: x.isdigit(), value))
+
 
 class ChronicDiseaseFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -24,6 +26,7 @@ class ChronicDiseaseFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker("word")
 
+
 class MedicineFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Medicine
@@ -31,12 +34,14 @@ class MedicineFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker("word")
 
+
 class AllergyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Allergy
         django_get_or_create = ("name",)
 
     name = factory.Faker("word")
+
 
 class GeneralHealthFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -46,7 +51,8 @@ class GeneralHealthFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     surgeries = factory.Faker("text", max_nb_chars=200)
     physical_activity_frequency = factory.Faker(
-        "random_element", elements=[value for value, _ in PhysicalActivityFrequency.choices]
+        "random_element",
+        elements=[value for value, _ in PhysicalActivityFrequency.choices],
     )
 
     @factory.post_generation
@@ -76,6 +82,7 @@ class GeneralHealthFactory(factory.django.DjangoModelFactory):
             for allergy in extracted:
                 self.allergies.add(allergy)
 
+
 class RelativesFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Relatives
@@ -83,12 +90,14 @@ class RelativesFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker("word")
 
+
 class CancerTypesFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CancerTypes
         django_get_or_create = ("name",)
 
     name = factory.Faker("word")
+
 
 class InjuriesTreatmentFactory(factory.django.DjangoModelFactory):
     class Meta:

@@ -147,57 +147,59 @@ class Command(BaseSeedCommand):
 
     def handle_seed(self, fake, *args, **options):
         """Executa o seed dos catálogos de saúde"""
-        chronic_diseases = self._bulk_seed(ChronicDisease, CHRONIC_DISEASES, "Doenças crônicas")
+        chronic_diseases = self._bulk_seed(
+            ChronicDisease, CHRONIC_DISEASES, "Doenças crônicas"
+        )
         medicines = self._bulk_seed(Medicine, MEDICINES, "Medicamentos")
         allergies = self._bulk_seed(Allergy, ALLERGIES, "Alergias")
-        
+
         return {
             "doenças crônicas": chronic_diseases,
             "medicamentos": medicines,
-            "alergias": allergies
+            "alergias": allergies,
         }
 
     def _clear_data(self, options):
         """Limpa catálogos existentes"""
-        self.stdout.write('🧹 Removendo catálogos existentes...')
-        
+        self.stdout.write("🧹 Removendo catálogos existentes...")
+
         chronic_count = ChronicDisease.objects.count()
         medicine_count = Medicine.objects.count()
         allergy_count = Allergy.objects.count()
-        
+
         ChronicDisease.objects.all().delete()
         Medicine.objects.all().delete()
         Allergy.objects.all().delete()
-        
+
         self.stdout.write(
             self.style.SUCCESS(
-                f'✅ Catálogos removidos: {chronic_count} doenças, '
-                f'{medicine_count} medicamentos, {allergy_count} alergias'
+                f"✅ Catálogos removidos: {chronic_count} doenças, "
+                f"{medicine_count} medicamentos, {allergy_count} alergias"
             )
         )
 
     def _bulk_seed(self, model, items, label):
         """Cria itens em lote para um modelo específico"""
         self.stdout.write(f"📋 Criando {label.lower()}...")
-        
+
         try:
             created_objects = model.objects.bulk_create(
                 [model(name=name) for name in items],
                 ignore_conflicts=True,
             )
-            
+
             # Contar quantos realmente foram criados
             total_existing = model.objects.filter(name__in=items).count()
-            
+
             self.stdout.write(
                 self.style.SUCCESS(
                     f"✅ {label}: {total_existing} total "
                     f"({len(created_objects)} novos, {total_existing - len(created_objects)} já existiam)"
                 )
             )
-            
+
             return total_existing
-            
+
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(f"❌ Erro ao criar {label.lower()}: {e}")

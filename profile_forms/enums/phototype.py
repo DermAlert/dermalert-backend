@@ -35,7 +35,10 @@ class FrecklesAmount(models.TextChoices):
 
 
 class SunExposureReaction(models.TextChoices):
-    ALWAYS_BURNS_PEELS_PAINFUL = "always_burns_peels_painful", "Always burns, painful, peels"
+    ALWAYS_BURNS_PEELS_PAINFUL = (
+        "always_burns_peels_painful",
+        "Always burns, painful, peels",
+    )
     BURNS_PEELS_A_LITTLE = "burns_peels_a_little", "Burns, peels a little"
     BURNS_NO_PEEL = "burns_no_peel", "Burns, doesn’t peel"
     SELDOM_OR_NOT_RED = "seldom_or_not_red", "Seldom red or not at all"
@@ -54,7 +57,10 @@ class SunSensitivityFace(models.TextChoices):
     SENSITIVE = "sensitive", "Sensitive"
     NORMAL = "normal", "Normal"
     RESISTANT = "resistant", "Resistant"
-    VERY_RESISTANT_NEVER_BURNS = "very_resistant_never_burns", "Very resistant, never burns"
+    VERY_RESISTANT_NEVER_BURNS = (
+        "very_resistant_never_burns",
+        "Very resistant, never burns",
+    )
 
 
 class PhototypeClass(models.TextChoices):

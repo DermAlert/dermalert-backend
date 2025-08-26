@@ -12,7 +12,9 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv("DJANGO_DEBUG", "False")
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0").split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0").split(
+    ","
+)
 
 # Django Debug Toolbar settings
 INTERNAL_IPS = os.getenv("INTERNAL_IPS", "localhost,127.0.0.1,0.0.0.0").split(",")
@@ -157,32 +159,32 @@ USE_I18N = True
 
 USE_TZ = True
 
-AWS_ACCESS_KEY_ID       = os.getenv("AWS_ACCESS_KEY_ID", "minioadmin")
-AWS_SECRET_ACCESS_KEY   = os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
-AWS_S3_ENDPOINT_URL     = os.getenv("AWS_S3_ENDPOINT_URL", "http://minio:9000")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "minioadmin")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "http://minio:9000")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "dermalert")
 
-AWS_S3_REGION_NAME      = os.getenv("AWS_S3_REGION_NAME", "us-east-1")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-1")
 AWS_S3_ADDRESSING_STYLE = "path"
-AWS_S3_URL_PROTOCOL     = os.getenv("AWS_S3_URL_PROTOCOL", "http:")
-AWS_S3_CUSTOM_DOMAIN    = os.getenv("AWS_S3_CUSTOM_DOMAIN", "localhost:9000")
-AWS_LOCATION            = os.getenv("AWS_LOCATION", "static")
-AWS_QUERYSTRING_AUTH    = False
-AWS_DEFAULT_ACL         = "public-read"
+AWS_S3_URL_PROTOCOL = os.getenv("AWS_S3_URL_PROTOCOL", "http:")
+AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "localhost:9000")
+AWS_LOCATION = os.getenv("AWS_LOCATION", "static")
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = "public-read"
 
 STATIC_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_CUSTOM_DOMAIN = f"{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}"
 
 COMMON_S3_OPTS = {
-    "bucket_name":      AWS_STORAGE_BUCKET_NAME,
-    "endpoint_url":     AWS_S3_ENDPOINT_URL,
-    "access_key":       AWS_ACCESS_KEY_ID,
-    "secret_key":       AWS_SECRET_ACCESS_KEY,
-    "region_name":      AWS_S3_REGION_NAME,
+    "bucket_name": AWS_STORAGE_BUCKET_NAME,
+    "endpoint_url": AWS_S3_ENDPOINT_URL,
+    "access_key": AWS_ACCESS_KEY_ID,
+    "secret_key": AWS_SECRET_ACCESS_KEY,
+    "region_name": AWS_S3_REGION_NAME,
     "addressing_style": AWS_S3_ADDRESSING_STYLE,
     "querystring_auth": AWS_QUERYSTRING_AUTH,
-    "default_acl":      AWS_DEFAULT_ACL,
+    "default_acl": AWS_DEFAULT_ACL,
 }
 
 STORAGES = {
@@ -207,7 +209,7 @@ STORAGES = {
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
+    X_FRAME_OPTIONS = "DENY"
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -236,4 +238,3 @@ USERNAME_FIELD = "cpf"
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = []
-

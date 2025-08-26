@@ -3,6 +3,7 @@ from django.db import models
 from .base_form import BaseForm
 from django.conf import settings
 
+
 class FamilyHistory(BaseForm):
     # Override BaseForm.user to avoid reverse name collision and keep singleton per user
     user = models.OneToOneField(
@@ -41,12 +42,17 @@ class FamilyHistory(BaseForm):
 
 class CancerTypes(BaseListedItem):
     """Model to represent cancer types in the family history."""
+
     pass
-    
+
+
 class Relatives(BaseListedItem):
     """Model to represent relatives in the family history."""
+
     pass
+
 
 class InjuriesTreatment(BaseListedItem):
     """Model to represent treatment for injuries."""
+
     pass

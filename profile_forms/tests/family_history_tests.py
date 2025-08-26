@@ -9,12 +9,18 @@ from .factories import (
     CancerTypesFactory,
     InjuriesTreatmentFactory,
 )
-from profile_forms.models import FamilyHistory, Relatives, CancerTypes, InjuriesTreatment
+from profile_forms.models import (
+    FamilyHistory,
+    Relatives,
+    CancerTypes,
+    InjuriesTreatment,
+)
 
 register(UserFactory)
 register(RelativesFactory)
 register(CancerTypesFactory)
 register(InjuriesTreatmentFactory)
+
 
 @pytest.mark.django_db(transaction=True)
 class TestFamilyHistoryAPI:
@@ -22,11 +28,11 @@ class TestFamilyHistoryAPI:
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
         data = {
-            "family_history": [ {"name": "Mãe"}, {"name": "Pai"} ],
-            "family_history_types": [ {"name": "Melanoma"} ],
+            "family_history": [{"name": "Mãe"}, {"name": "Pai"}],
+            "family_history_types": [{"name": "Melanoma"}],
             "patient_cancer_type": {"name": "Melanoma"},
             "removed_injuries": True,
-            "injuries_treatment": [ {"name": "Cirurgia excisional"} ],
+            "injuries_treatment": [{"name": "Cirurgia excisional"}],
         }
         resp = api_client.post(url, data=data, format="json")
         assert resp.status_code == 201
@@ -37,7 +43,9 @@ class TestFamilyHistoryAPI:
         assert resp.data["removed_injuries"] is True
         assert len(resp.data["injuries_treatment"]) == 1
 
-    def test_create_without_optional_lists(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_without_optional_lists(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
         data = {
@@ -50,7 +58,9 @@ class TestFamilyHistoryAPI:
         assert resp.data["patient_cancer_type"] is None
         assert resp.data["injuries_treatment"] == []
 
-    def test_create_duplicate_for_same_user(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_duplicate_for_same_user(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
         data = {"removed_injuries": False}
@@ -109,7 +119,9 @@ class TestFamilyHistoryAPI:
         resp = api_client.post(url, data={"removed_injuries": True}, format="json")
         assert resp.status_code == 404
 
-    def test_retrieve_nonexistent_form(self, api_client: APIClient, user_factory: UserFactory):
+    def test_retrieve_nonexistent_form(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
         resp = api_client.get(url)
@@ -124,7 +136,9 @@ class TestFamilyHistoryListedItems:
         CancerTypes.objects.all().delete()
         InjuriesTreatment.objects.all().delete()
 
-    def test_relatives_list_and_search(self, api_client: APIClient, relatives_factory: RelativesFactory):
+    def test_relatives_list_and_search(
+        self, api_client: APIClient, relatives_factory: RelativesFactory
+    ):
         relatives_factory.create(name="Mãe")
         relatives_factory.create(name="Pai")
         relatives_factory.create(name="Irmão")
@@ -137,7 +151,9 @@ class TestFamilyHistoryListedItems:
         assert len(search_resp.data) == 1
         assert search_resp.data[0]["name"] == "Pai"
 
-    def test_cancer_types_search_partial(self, api_client: APIClient, cancer_types_factory: CancerTypesFactory):
+    def test_cancer_types_search_partial(
+        self, api_client: APIClient, cancer_types_factory: CancerTypesFactory
+    ):
         cancer_types_factory.create(name="Melanoma")
         cancer_types_factory.create(name="Carinoma Basocelular")
         cancer_types_factory.create(name="Carinoma Espinocelular")
@@ -148,7 +164,11 @@ class TestFamilyHistoryListedItems:
         names = sorted([r["name"] for r in resp.data])
         assert names == ["Carinoma Basocelular", "Carinoma Espinocelular"]
 
-    def test_injuries_treatments_ordering(self, api_client: APIClient, injuries_treatment_factory: InjuriesTreatmentFactory):
+    def test_injuries_treatments_ordering(
+        self,
+        api_client: APIClient,
+        injuries_treatment_factory: InjuriesTreatmentFactory,
+    ):
         injuries_treatment_factory.create(name="Laser")
         injuries_treatment_factory.create(name="Cirurgia excisional")
         injuries_treatment_factory.create(name="Crioterapia")

@@ -7,6 +7,7 @@ from accounts.models import User
 
 register(UserFactory)
 
+
 @pytest.mark.django_db
 class TestUserAPI:
     def test_list(self, api_client: APIClient, user_factory: UserFactory):
@@ -19,12 +20,15 @@ class TestUserAPI:
     def test_create(self, api_client: APIClient, user_factory: UserFactory):
         new_user = user_factory.build()
         url = reverse("user-list")
-        resp = api_client.post(url, data={
-            "cpf": new_user.cpf,
-            "name": new_user.name,
-            "email": new_user.email,
-            "password": new_user.password,
-        })
+        resp = api_client.post(
+            url,
+            data={
+                "cpf": new_user.cpf,
+                "name": new_user.name,
+                "email": new_user.email,
+                "password": new_user.password,
+            },
+        )
         assert resp.status_code == 201
         assert resp.data["cpf"] == new_user.cpf
         assert resp.data["email"] == new_user.email
@@ -54,12 +58,15 @@ class TestUserAPI:
 
     def test_invalid_cpf_validation(self, api_client: APIClient):
         url = reverse("user-list")
-        resp = api_client.post(url, data={
-            "cpf": "123",  # Invalid: not 11 digits
-            "name": "Test User",
-            "email": "test@example.com",
-            "password": "password123",
-        })
+        resp = api_client.post(
+            url,
+            data={
+                "cpf": "123",  # Invalid: not 11 digits
+                "name": "Test User",
+                "email": "test@example.com",
+                "password": "password123",
+            },
+        )
         assert resp.status_code == 400
         assert "cpf" in resp.data
 
@@ -85,32 +92,38 @@ class TestUserAPI:
         assert resp.data["count"] == 1
         assert resp.data["results"][0]["name"] == user.name
 
-    def test_create_user_with_existing_cpf(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_user_with_existing_cpf(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("user-list")
-        resp = api_client.post(url, data={
-            "cpf": user.cpf,
-            "name": "New User",
-            "email": "newuser@email.com",
-            "password": "newpassword",
-        })
+        resp = api_client.post(
+            url,
+            data={
+                "cpf": user.cpf,
+                "name": "New User",
+                "email": "newuser@email.com",
+                "password": "newpassword",
+            },
+        )
         assert resp.status_code == 400
         assert User.objects.filter(email="newuser@email.com").exists() == False
         assert User.objects.filter(email=user.email).exists() == True
 
-    def test_update_user_with_existing_cpf(self, api_client: APIClient, user_factory: UserFactory):
+    def test_update_user_with_existing_cpf(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("user-detail", kwargs={"pk": user.id})
-        resp = api_client.patch(url, data={
-            "cpf": user.cpf,  # Trying to update with the same CPF
-            "name": "Updated Name",
-            "email": "newemail@email.com",
-        })
+        resp = api_client.patch(
+            url,
+            data={
+                "cpf": user.cpf,  # Trying to update with the same CPF
+                "name": "Updated Name",
+                "email": "newemail@email.com",
+            },
+        )
         assert resp.status_code == 200
         user.refresh_from_db()
         assert user.name == "Updated Name"
         assert user.email == "newemail@email.com"
-
-
-
-

@@ -1,6 +1,7 @@
 """
 Ferramentas de integração com MinIO / S3
 """
+
 from __future__ import annotations
 
 import json
@@ -46,7 +47,9 @@ def create_bucket_if_not_exists(bucket: str | None = None) -> bool:
     return True
 
 
-def set_static_prefix_read_only(bucket: str | None = None, prefix: str = "static/*") -> None:
+def set_static_prefix_read_only(
+    bucket: str | None = None, prefix: str = "static/*"
+) -> None:
     """
     Aplica uma bucket-policy que libera leitura anônima no prefixo informado
     (padrão: static/*). Idempotente – substitui ou cria a policy.

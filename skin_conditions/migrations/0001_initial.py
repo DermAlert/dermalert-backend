@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,13 +14,44 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='SkinCondition',
+            name="SkinCondition",
             fields=[
-                ('id', models.UUIDField(editable=False, primary_key=True, serialize=False)),
-                ('location', models.CharField(choices=[('head', 'Head'), ('neck', 'Neck'), ('back', 'Back'), ('chest', 'Chest'), ('abdomen', 'Abdomen'), ('arm', 'Arm'), ('leg', 'Leg'), ('hand', 'Hand'), ('foot', 'Foot')], max_length=50, verbose_name='skin_location')),
-                ('reference', models.CharField(blank=True, max_length=255, null=True, verbose_name='reference')),
-                ('day_discovery', models.DateField()),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(editable=False, primary_key=True, serialize=False),
+                ),
+                (
+                    "location",
+                    models.CharField(
+                        choices=[
+                            ("head", "Head"),
+                            ("neck", "Neck"),
+                            ("back", "Back"),
+                            ("chest", "Chest"),
+                            ("abdomen", "Abdomen"),
+                            ("arm", "Arm"),
+                            ("leg", "Leg"),
+                            ("hand", "Hand"),
+                            ("foot", "Foot"),
+                        ],
+                        max_length=50,
+                        verbose_name="skin_location",
+                    ),
+                ),
+                (
+                    "reference",
+                    models.CharField(
+                        blank=True, max_length=255, null=True, verbose_name="reference"
+                    ),
+                ),
+                ("day_discovery", models.DateField()),
+                (
+                    "user_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

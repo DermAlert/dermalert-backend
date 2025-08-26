@@ -6,6 +6,7 @@ from core.minio_utils import (
     upload_test_file,
 )
 
+
 class Command(BaseCommand):
     """
     Configura o MinIO/S3 para o projeto:

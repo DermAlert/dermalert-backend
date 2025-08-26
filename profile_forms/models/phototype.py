@@ -102,7 +102,9 @@ class Phototype(BaseForm):
     freckles = models.CharField(max_length=50, choices=FrecklesAmount.choices)
     sun_exposed = models.CharField(max_length=80, choices=SunExposureReaction.choices)
     tanned_skin = models.CharField(max_length=50, choices=TannedSkinAbility.choices)
-    sun_sensitive_skin = models.CharField(max_length=80, choices=SunSensitivityFace.choices)
+    sun_sensitive_skin = models.CharField(
+        max_length=80, choices=SunSensitivityFace.choices
+    )
 
     # Auto-calculated
     phototype = models.CharField(

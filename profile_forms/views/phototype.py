@@ -17,6 +17,7 @@ class PhototypeSingletonViewSet(
     POST /patients/{user_pk}/forms/phototype/ -> create
     GET  /patients/{user_pk}/forms/phototype/ -> detail (singleton)
     """
+
     serializer_class = PhototypeSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]

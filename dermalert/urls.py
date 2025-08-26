@@ -4,9 +4,9 @@ from django.views.generic import RedirectView
 from accounts.views import UserViewSet, PatientViewSet
 from address.views import AddressViewSet
 from profile_forms.views import (
-    GeneralHealthSingletonViewSet, 
-    AllergyListView, 
-    MedicineListView, 
+    GeneralHealthSingletonViewSet,
+    AllergyListView,
+    MedicineListView,
     ChronicDiseaseListView,
     FamilyHistorySingletonViewSet,
     RelativesListView,
@@ -25,16 +25,16 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Dermalert API",
-      default_version='v1',
-      description="API documentation for the Dermalert application",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=[permissions.AllowAny],
+    openapi.Info(
+        title="Dermalert API",
+        default_version="v1",
+        description="API documentation for the Dermalert application",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
 )
 
 router = DefaultRouter()
@@ -67,13 +67,27 @@ urlpatterns = [
     path("api/v1/", include(patient_router.urls)),
     path("api/v1/allergies/", AllergyListView.as_view(), name="allergy-list"),
     path("api/v1/medicines/", MedicineListView.as_view(), name="medicine-list"),
-    path("api/v1/chronic-diseases/", ChronicDiseaseListView.as_view(), name="chronic-disease-list"),
+    path(
+        "api/v1/chronic-diseases/",
+        ChronicDiseaseListView.as_view(),
+        name="chronic-disease-list",
+    ),
     path("api/v1/relatives/", RelativesListView.as_view(), name="relatives-list"),
     path("api/v1/cancer-types/", CancerTypeListView.as_view(), name="cancer-type-list"),
-    path("api/v1/injuries-treatments/", InjuriesTreatmentListView.as_view(), name="injuries-treatment-list"),
-    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('api/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path(
+        "api/v1/injuries-treatments/",
+        InjuriesTreatmentListView.as_view(),
+        name="injuries-treatment-list",
+    ),
+    path(
+        "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
+    ),
+    path(
+        "api/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
 
 urlpatterns += debug_toolbar_urls()

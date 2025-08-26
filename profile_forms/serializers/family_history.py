@@ -3,12 +3,12 @@ from profile_forms.models import (
     FamilyHistory,
     Relatives,
     CancerTypes,
-    InjuriesTreatment
+    InjuriesTreatment,
 )
 from .listed_items import (
     RelativesSerializer,
     CancerTypeSerializer,
-    InjuriesTreatmentSerializer
+    InjuriesTreatmentSerializer,
 )
 
 
@@ -48,7 +48,9 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
             instance.family_history_types.add(ct_obj)
 
         if patient_type_data is not None:
-            ct_obj, _ = CancerTypes.objects.get_or_create(name=patient_type_data["name"])
+            ct_obj, _ = CancerTypes.objects.get_or_create(
+                name=patient_type_data["name"]
+            )
             instance.patient_cancer_type = ct_obj
 
         for tr in treatments_data:
@@ -80,7 +82,9 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
 
         if patient_type_data is not None:
             if patient_type_data:
-                ct_obj, _ = CancerTypes.objects.get_or_create(name=patient_type_data["name"])
+                ct_obj, _ = CancerTypes.objects.get_or_create(
+                    name=patient_type_data["name"]
+                )
                 instance.patient_cancer_type = ct_obj
             else:
                 instance.patient_cancer_type = None

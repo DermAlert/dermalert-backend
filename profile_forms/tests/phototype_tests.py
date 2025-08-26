@@ -23,7 +23,9 @@ register(PhototypeFactory)
 
 @pytest.mark.django_db(transaction=True)
 class TestPhototypeAPI:
-    def test_create_min_scores_class_I(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_min_scores_class_I(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-phototype-list", kwargs={"user_pk": user.id})
         payload = {
@@ -41,7 +43,9 @@ class TestPhototypeAPI:
         assert obj.phototype == PhototypeClass.I
         assert obj.score == 0
 
-    def test_create_mid_scores_class_III(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_mid_scores_class_III(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-phototype-list", kwargs={"user_pk": user.id})
         payload = {
@@ -62,7 +66,9 @@ class TestPhototypeAPI:
         assert obj.phototype == PhototypeClass.III
         assert 17 <= obj.score <= 25
 
-    def test_create_high_scores_class_IV(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_high_scores_class_IV(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-phototype-list", kwargs={"user_pk": user.id})
         payload = {
@@ -82,7 +88,9 @@ class TestPhototypeAPI:
         assert obj.phototype == PhototypeClass.IV
         assert 26 <= obj.score <= 30
 
-    def test_create_duplicate_for_same_user(self, api_client: APIClient, user_factory: UserFactory):
+    def test_create_duplicate_for_same_user(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-phototype-list", kwargs={"user_pk": user.id})
         payload = {
@@ -106,4 +114,3 @@ class TestPhototypeAPI:
         assert res.status_code == 200
         assert res.data["id"] == pt.id
         assert res.data["user"] == pt.user.id
-

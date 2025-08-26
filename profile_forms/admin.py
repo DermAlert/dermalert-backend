@@ -4,5 +4,5 @@ from profile_forms.models import Phototype
 
 @admin.register(Phototype)
 class PhototypeAdmin(admin.ModelAdmin):
-	list_display = ("id", "user", "phototype", "score")
-	list_filter = ("phototype",)
+    list_display = ("id", "user", "phototype", "score")
+    list_filter = ("phototype",)
