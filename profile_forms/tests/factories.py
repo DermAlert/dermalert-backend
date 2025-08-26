@@ -9,6 +9,7 @@ from profile_forms.models import (
     Phototype,
     RiskProtectiveFactors,
     CancerResearch,
+    ClinicalHistory,
 )
 from profile_forms.enums.phototype import (
     SkinColor,
@@ -26,6 +27,7 @@ from profile_forms.enums.risk_protective_factors import (
     CheckupsFrequency,
 )
 from profile_forms.enums.cancer_research import HowLong
+from profile_forms.enums.clinical_history import YesNoUnknown, CompressionStockingsUse
 
 
 def clear_str(value: str) -> str:
@@ -190,3 +192,28 @@ class CancerResearchFactory(factory.django.DjangoModelFactory):
     lesion_aspect = factory.Faker("pybool")
     doctor_assistance = factory.Faker("pybool")
     diagnosis = factory.Faker("sentence")
+
+
+class ClinicalHistoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ClinicalHistory
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+
+    hypertension = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNoUnknown.choices]
+    )
+    diabetes = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNoUnknown.choices]
+    )
+    deep_vein_thrombosis = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNoUnknown.choices]
+    )
+    chronic_venous_insufficiency = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNoUnknown.choices]
+    )
+    compression_stockings_use = factory.Faker(
+        "random_element",
+        elements=[value for value, _ in CompressionStockingsUse.choices],
+    )

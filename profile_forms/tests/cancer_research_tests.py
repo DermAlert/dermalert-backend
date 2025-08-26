@@ -29,7 +29,9 @@ class TestCancerResearchAPI:
         assert res.data["user"] == user.id
         assert res.data["diagnosis"] == "Benign nevus"
 
-    def test_duplicate_for_same_user(self, api_client: APIClient, user_factory: UserFactory):
+    def test_duplicate_for_same_user(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
         user = user_factory.create()
         url = reverse("patient-cancer-research-list", kwargs={"user_pk": user.id})
         payload = {
@@ -45,7 +47,9 @@ class TestCancerResearchAPI:
         second = api_client.post(url, payload, format="json")
         assert second.status_code == 403
 
-    def test_retrieve(self, api_client: APIClient, cancer_research_factory: CancerResearchFactory):
+    def test_retrieve(
+        self, api_client: APIClient, cancer_research_factory: CancerResearchFactory
+    ):
         obj = cancer_research_factory.create()
         url = reverse("patient-cancer-research-list", kwargs={"user_pk": obj.user.id})
         res = api_client.get(url)
