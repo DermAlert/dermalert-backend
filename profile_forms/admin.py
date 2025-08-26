@@ -1,5 +1,10 @@
 from django.contrib import admin
-from profile_forms.models import Phototype, ClinicalHistory, LifestyleRisk
+from profile_forms.models import (
+    Phototype,
+    ClinicalHistory,
+    LifestyleRisk,
+    FamilyVascularHistory,
+)
 
 
 @admin.register(Phototype)
@@ -30,4 +35,14 @@ class LifestyleRiskAdmin(admin.ModelAdmin):
         "leg_foot_trauma",
         "smoking",
         "physical_activity",
+    )
+
+
+@admin.register(FamilyVascularHistory)
+class FamilyVascularHistoryAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "family_leg_ulcers",
+        "family_varicose_or_circulatory",
     )

@@ -11,6 +11,7 @@ from profile_forms.models import (
     CancerResearch,
     ClinicalHistory,
     LifestyleRisk,
+    FamilyVascularHistory,
 )
 from profile_forms.enums.phototype import (
     SkinColor,
@@ -34,6 +35,7 @@ from profile_forms.enums.lifestyle_risk import (
     YesNo,
     SmokingStatus,
 )
+from profile_forms.enums.clinical_history import YesNoUnknown as FvhYesNoUnknown
 
 
 def clear_str(value: str) -> str:
@@ -242,4 +244,18 @@ class LifestyleRiskFactory(factory.django.DjangoModelFactory):
     )
     physical_activity = factory.Faker(
         "random_element", elements=[value for value, _ in YesNo.choices]
+    )
+
+
+class FamilyVascularHistoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = FamilyVascularHistory
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+    family_leg_ulcers = factory.Faker(
+        "random_element", elements=[value for value, _ in FvhYesNoUnknown.choices]
+    )
+    family_varicose_or_circulatory = factory.Faker(
+        "random_element", elements=[value for value, _ in FvhYesNoUnknown.choices]
     )
