@@ -8,6 +8,7 @@ from profile_forms.models import (
     InjuriesTreatment,
     Phototype,
     RiskProtectiveFactors,
+    CancerResearch,
 )
 from profile_forms.enums.phototype import (
     SkinColor,
@@ -24,6 +25,7 @@ from profile_forms.enums.risk_protective_factors import (
     UVProtectionSPF,
     CheckupsFrequency,
 )
+from profile_forms.enums.cancer_research import HowLong
 
 
 def clear_str(value: str) -> str:
@@ -171,3 +173,20 @@ class RiskProtectiveFactorsFactory(factory.django.DjangoModelFactory):
         "random_element", elements=[value for value, _ in CheckupsFrequency.choices]
     )
     cancer_campaigns = factory.Faker("pybool")
+
+
+class CancerResearchFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CancerResearch
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+
+    suspicious_moles = factory.Faker("pybool")
+    bleed_itch = factory.Faker("pybool")
+    how_long = factory.Faker(
+        "random_element", elements=[value for value, _ in HowLong.choices]
+    )
+    lesion_aspect = factory.Faker("pybool")
+    doctor_assistance = factory.Faker("pybool")
+    diagnosis = factory.Faker("sentence")
