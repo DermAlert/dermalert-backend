@@ -1,10 +1,17 @@
 from core.models import BaseListedItem
 from django.db import models
 from .base_form import BaseForm
+from django.conf import settings
 
 class FamilyHistory(BaseForm):
+    # Override BaseForm.user to avoid reverse name collision and keep singleton per user
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="family_history",
+    )
     family_history = models.ManyToManyField(
-        "Parents",
+        "Relatives",
         blank=True,
         related_name="cancer_forms",
     )
@@ -36,8 +43,8 @@ class CancerTypes(BaseListedItem):
     """Model to represent cancer types in the family history."""
     pass
     
-class Parents(BaseListedItem):
-    """Model to represent parents in the family history."""
+class Relatives(BaseListedItem):
+    """Model to represent relatives in the family history."""
     pass
 
 class InjuriesTreatment(BaseListedItem):

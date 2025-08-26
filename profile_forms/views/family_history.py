@@ -8,13 +8,13 @@ from django.contrib.auth import get_user_model
 
 from profile_forms.models import (
     FamilyHistory,
-    Parents,
+    Relatives,
     CancerTypes,
     InjuriesTreatment,
 )
 from profile_forms.serializers.family_history import (
     FamilyHistorySerializer,
-    ParentsSerializer,
+    RelativesSerializer,
     CancerTypeSerializer,
     InjuriesTreatmentSerializer,
 )
@@ -56,9 +56,9 @@ class FamilyHistorySingletonViewSet(
 
 
 
-class ParentsListView(generics.ListAPIView):
-    queryset = Parents.objects.all()
-    serializer_class = ParentsSerializer
+class RelativesListView(generics.ListAPIView):
+    queryset = Relatives.objects.all()
+    serializer_class = RelativesSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None

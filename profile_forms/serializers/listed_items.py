@@ -4,7 +4,7 @@ from profile_forms.models import (
     ChronicDisease,
     Medicine,
     Allergy,
-    Parents,
+    Relatives,
     CancerTypes,
     InjuriesTreatment,
 )
@@ -37,9 +37,9 @@ class AllergySerializer(serializers.ModelSerializer):
         }
 
 
-class ParentsSerializer(serializers.ModelSerializer):
+class RelativesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Parents
+        model = Relatives
         fields = ("id", "name")
         extra_kwargs = {
             "name": {"validators": []}

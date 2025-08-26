@@ -7,7 +7,8 @@ from .general_health import (
 )
 from .family_history import (
     FamilyHistory,
-    Parents,
+    Relatives,
     CancerTypes,
     InjuriesTreatment
 )
+from .phototype import Phototype

@@ -1,19 +1,19 @@
 from rest_framework import serializers
 from profile_forms.models import (
     FamilyHistory,
-    Parents,
+    Relatives,
     CancerTypes,
     InjuriesTreatment
 )
 from .listed_items import (
-    ParentsSerializer,
+    RelativesSerializer,
     CancerTypeSerializer,
     InjuriesTreatmentSerializer
 )
 
 
 class FamilyHistorySerializer(serializers.ModelSerializer):
-    family_history = ParentsSerializer(many=True, required=False)
+    family_history = RelativesSerializer(many=True, required=False)
     family_history_types = CancerTypeSerializer(many=True, required=False)
     patient_cancer_type = CancerTypeSerializer(required=False, allow_null=True)
     injuries_treatment = InjuriesTreatmentSerializer(many=True, required=False)
@@ -32,15 +32,15 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
         read_only_fields = ("user",)
 
     def create(self, validated_data):
-        parents_data = validated_data.pop("family_history", [])
+        relatives_data = validated_data.pop("family_history", [])
         family_types_data = validated_data.pop("family_history_types", [])
         patient_type_data = validated_data.pop("patient_cancer_type", None)
         treatments_data = validated_data.pop("injuries_treatment", [])
 
         instance = FamilyHistory.objects.create(**validated_data)
 
-        for parent in parents_data:
-            parent_obj, _ = Parents.objects.get_or_create(name=parent["name"])
+        for parent in relatives_data:
+            parent_obj, _ = Relatives.objects.get_or_create(name=parent["name"])
             instance.family_history.add(parent_obj)
 
         for ct in family_types_data:
@@ -58,7 +58,7 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        parents_data = validated_data.pop("family_history", None)
+        relatives_data = validated_data.pop("family_history", None)
         family_types_data = validated_data.pop("family_history_types", None)
         patient_type_data = validated_data.pop("patient_cancer_type", None)
         treatments_data = validated_data.pop("injuries_treatment", None)
@@ -66,10 +66,10 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
-        if parents_data is not None:
+        if relatives_data is not None:
             instance.family_history.clear()
-            for parent in parents_data:
-                parent_obj, _ = Parents.objects.get_or_create(name=parent["name"])
+            for parent in relatives_data:
+                parent_obj, _ = Relatives.objects.get_or_create(name=parent["name"])
                 instance.family_history.add(parent_obj)
 
         if family_types_data is not None:

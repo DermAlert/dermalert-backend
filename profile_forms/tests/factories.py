@@ -1,25 +1,21 @@
 import factory
-from django.contrib.auth import get_user_model
+from accounts.tests.factories import UserFactory
 from profile_forms.models import GeneralHealth, ChronicDisease, Medicine, Allergy
 from profile_forms.enums.general_health import PhysicalActivityFrequency
-
-User = get_user_model()
+from profile_forms.models import Relatives, CancerTypes, InjuriesTreatment, Phototype
+from profile_forms.enums.phototype import (
+    SkinColor,
+    EyesColor,
+    HairColor,
+    FrecklesAmount,
+    SunExposureReaction,
+    TannedSkinAbility,
+    SunSensitivityFace,
+)
 
 def clear_str(value: str) -> str:
     """Remove non-numeric characters from string."""
     return ''.join(filter(lambda x: x.isdigit(), value))
-
-class UserFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = User
-        django_get_or_create = ("cpf",)
-        exclude = ("raw_cpf",)
-
-    raw_cpf = factory.Faker('cpf', locale='pt_BR')
-    cpf = factory.LazyAttribute(lambda o: clear_str(o.raw_cpf))
-    name = factory.Faker("name")
-    email = factory.LazyAttribute(lambda o: f"{o.cpf}@ex.com")
-    password = factory.PostGenerationMethodCall("set_password", "s3nh4!")
 
 class ChronicDiseaseFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -79,3 +75,54 @@ class GeneralHealthFactory(factory.django.DjangoModelFactory):
         if extracted:
             for allergy in extracted:
                 self.allergies.add(allergy)
+
+class RelativesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Relatives
+        django_get_or_create = ("name",)
+
+    name = factory.Faker("word")
+
+class CancerTypesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CancerTypes
+        django_get_or_create = ("name",)
+
+    name = factory.Faker("word")
+
+class InjuriesTreatmentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = InjuriesTreatment
+        django_get_or_create = ("name",)
+
+    name = factory.Faker("word")
+
+
+class PhototypeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Phototype
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+
+    skin_color = factory.Faker(
+        "random_element", elements=[value for value, _ in SkinColor.choices]
+    )
+    eyes_color = factory.Faker(
+        "random_element", elements=[value for value, _ in EyesColor.choices]
+    )
+    hair_color = factory.Faker(
+        "random_element", elements=[value for value, _ in HairColor.choices]
+    )
+    freckles = factory.Faker(
+        "random_element", elements=[value for value, _ in FrecklesAmount.choices]
+    )
+    sun_exposed = factory.Faker(
+        "random_element", elements=[value for value, _ in SunExposureReaction.choices]
+    )
+    tanned_skin = factory.Faker(
+        "random_element", elements=[value for value, _ in TannedSkinAbility.choices]
+    )
+    sun_sensitive_skin = factory.Faker(
+        "random_element", elements=[value for value, _ in SunSensitivityFace.choices]
+    )

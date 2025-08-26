@@ -9,9 +9,10 @@ from profile_forms.views import (
     MedicineListView, 
     ChronicDiseaseListView,
     FamilyHistorySingletonViewSet,
-    ParentsListView,
+    RelativesListView,
     CancerTypeListView,
-    InjuriesTreatmentListView
+    InjuriesTreatmentListView,
+    PhototypeSingletonViewSet,
 )
 
 from debug_toolbar.toolbar import debug_toolbar_urls
@@ -52,6 +53,11 @@ patient_router.register(
     FamilyHistorySingletonViewSet,
     basename="patient-family-history",
 )
+patient_router.register(
+    r"forms/phototype",
+    PhototypeSingletonViewSet,
+    basename="patient-phototype",
+)
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/", permanent=False)),
@@ -62,7 +68,7 @@ urlpatterns = [
     path("api/v1/allergies/", AllergyListView.as_view(), name="allergy-list"),
     path("api/v1/medicines/", MedicineListView.as_view(), name="medicine-list"),
     path("api/v1/chronic-diseases/", ChronicDiseaseListView.as_view(), name="chronic-disease-list"),
-    path("api/v1/parents/", ParentsListView.as_view(), name="parents-list"),
+    path("api/v1/relatives/", RelativesListView.as_view(), name="relatives-list"),
     path("api/v1/cancer-types/", CancerTypeListView.as_view(), name="cancer-type-list"),
     path("api/v1/injuries-treatments/", InjuriesTreatmentListView.as_view(), name="injuries-treatment-list"),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

@@ -10,12 +10,12 @@ class BaseForm(BaseModel):
 
     id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True, null=True)
+    # Concrete forms should override this field to define their own relation/related_name.
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="profile_forms",
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
 
     class Meta:

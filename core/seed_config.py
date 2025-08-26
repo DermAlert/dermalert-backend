@@ -27,7 +27,14 @@ SEED_COMMANDS = {
         'description': 'Catálogos de saúde (doenças, medicamentos, alergias)',
         'priority': 30
     },
-    
+
+    'seed_family_history_catalogs': {
+        'app': 'profile_forms',
+        'dependencies': [],
+        'description': 'Catálogos de histórico familiar (parentes, tipos de câncer, tratamentos de lesões)',
+        'priority': 30
+    },
+
     # App accounts - depende dos dados básicos
     'seed_accounts': {
         'app': 'accounts',

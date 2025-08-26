@@ -11,9 +11,9 @@ class User(AbstractUser, BaseModel):
     cpf = models.CharField(
         _("CPF"),
         max_length=11,
-        help_text=_(""),
+        help_text="",
         error_messages={
-            "unique": _("A user with that cpf already exists."),
+            "unique": "A user with that cpf already exists.",
         },
         unique=True,
         blank=False,

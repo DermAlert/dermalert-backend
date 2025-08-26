@@ -1,6 +1,6 @@
 from .family_history import (
     FamilyHistorySingletonViewSet,
-    ParentsListView,
+    RelativesListView,
     CancerTypeListView,
     InjuriesTreatmentListView,
 )
@@ -11,3 +11,4 @@ from .general_health import (
     MedicineListView,
     AllergyListView,
 )
+from .phototype import PhototypeSingletonViewSet
