@@ -12,3 +12,4 @@ from .general_health import (
     AllergyListView,
 )
 from .phototype import PhototypeSingletonViewSet
+from .risk_protective_factors import RiskProtectiveFactorsSingletonViewSet

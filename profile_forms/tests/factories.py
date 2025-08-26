@@ -2,7 +2,13 @@ import factory
 from accounts.tests.factories import UserFactory
 from profile_forms.models import GeneralHealth, ChronicDisease, Medicine, Allergy
 from profile_forms.enums.general_health import PhysicalActivityFrequency
-from profile_forms.models import Relatives, CancerTypes, InjuriesTreatment, Phototype
+from profile_forms.models import (
+    Relatives,
+    CancerTypes,
+    InjuriesTreatment,
+    Phototype,
+    RiskProtectiveFactors,
+)
 from profile_forms.enums.phototype import (
     SkinColor,
     EyesColor,
@@ -11,6 +17,12 @@ from profile_forms.enums.phototype import (
     SunExposureReaction,
     TannedSkinAbility,
     SunSensitivityFace,
+)
+from profile_forms.enums.risk_protective_factors import (
+    SunExposurePeriod,
+    SunBurnHistory,
+    UVProtectionSPF,
+    CheckupsFrequency,
 )
 
 
@@ -135,3 +147,27 @@ class PhototypeFactory(factory.django.DjangoModelFactory):
     sun_sensitive_skin = factory.Faker(
         "random_element", elements=[value for value, _ in SunSensitivityFace.choices]
     )
+
+
+class RiskProtectiveFactorsFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = RiskProtectiveFactors
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+
+    sun_exposure_period = factory.Faker(
+        "random_element", elements=[value for value, _ in SunExposurePeriod.choices]
+    )
+    sun_burn = factory.Faker(
+        "random_element", elements=[value for value, _ in SunBurnHistory.choices]
+    )
+    uv_protection = factory.Faker(
+        "random_element", elements=[value for value, _ in UVProtectionSPF.choices]
+    )
+    hat_use = factory.Faker("pybool")
+    artifitial_tan = factory.Faker("pybool")
+    checkups_frequency = factory.Faker(
+        "random_element", elements=[value for value, _ in CheckupsFrequency.choices]
+    )
+    cancer_campaigns = factory.Faker("pybool")
