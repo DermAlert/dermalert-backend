@@ -17,3 +17,5 @@ from .cancer_research import CancerResearchSingletonViewSet
 from .clinical_history import ClinicalHistorySingletonViewSet
 from .lifestyle_risk import LifestyleRiskSingletonViewSet
 from .family_vascular_history import FamilyVascularHistorySingletonViewSet
+from .current_ulcer_info import CurrentUlcerInfoSingletonViewSet
+from .care_access_support import CareAccessSupportSingletonViewSet

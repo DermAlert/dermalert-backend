@@ -18,6 +18,8 @@ from profile_forms.views import (
     ClinicalHistorySingletonViewSet,
     LifestyleRiskSingletonViewSet,
     FamilyVascularHistorySingletonViewSet,
+    CurrentUlcerInfoSingletonViewSet,
+    CareAccessSupportSingletonViewSet,
 )
 
 from debug_toolbar.toolbar import debug_toolbar_urls
@@ -87,6 +89,16 @@ patient_router.register(
     r"forms/family-vascular-history",
     FamilyVascularHistorySingletonViewSet,
     basename="patient-family-vascular-history",
+)
+patient_router.register(
+    r"forms/current-ulcer-info",
+    CurrentUlcerInfoSingletonViewSet,
+    basename="patient-current-ulcer-info",
+)
+patient_router.register(
+    r"forms/care-access-support",
+    CareAccessSupportSingletonViewSet,
+    basename="patient-care-access-support",
 )
 
 urlpatterns = [

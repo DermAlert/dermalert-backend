@@ -4,6 +4,8 @@ from profile_forms.models import (
     ClinicalHistory,
     LifestyleRisk,
     FamilyVascularHistory,
+    CurrentUlcerInfo,
+    CareAccessSupport,
 )
 
 
@@ -45,4 +47,25 @@ class FamilyVascularHistoryAdmin(admin.ModelAdmin):
         "user",
         "family_leg_ulcers",
         "family_varicose_or_circulatory",
+    )
+
+
+@admin.register(CurrentUlcerInfo)
+class CurrentUlcerInfoAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "how_long",
+        "treated_elsewhere",
+        "used_antibiotics",
+    )
+
+
+@admin.register(CareAccessSupport)
+class CareAccessSupportAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "has_dressings_available",
+        "has_help_at_home",
     )

@@ -12,6 +12,8 @@ from profile_forms.models import (
     ClinicalHistory,
     LifestyleRisk,
     FamilyVascularHistory,
+    CurrentUlcerInfo,
+    CareAccessSupport,
 )
 from profile_forms.enums.phototype import (
     SkinColor,
@@ -36,6 +38,7 @@ from profile_forms.enums.lifestyle_risk import (
     SmokingStatus,
 )
 from profile_forms.enums.clinical_history import YesNoUnknown as FvhYesNoUnknown
+from profile_forms.enums.current_ulcer_info import UlcerTreatmentPlace
 
 
 def clear_str(value: str) -> str:
@@ -256,6 +259,34 @@ class FamilyVascularHistoryFactory(factory.django.DjangoModelFactory):
     family_leg_ulcers = factory.Faker(
         "random_element", elements=[value for value, _ in FvhYesNoUnknown.choices]
     )
-    family_varicose_or_circulatory = factory.Faker(
+
+
+class CurrentUlcerInfoFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CurrentUlcerInfo
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+    how_long = factory.Faker(
+        "random_element", elements=[value for value, _ in HowLong.choices]
+    )
+    treated_elsewhere = factory.Faker(
+        "random_element", elements=[value for value, _ in UlcerTreatmentPlace.choices]
+    )
+    used_antibiotics = factory.Faker(
         "random_element", elements=[value for value, _ in FvhYesNoUnknown.choices]
+    )
+
+
+class CareAccessSupportFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CareAccessSupport
+        django_get_or_create = ("user",)
+
+    user = factory.SubFactory(UserFactory)
+    has_dressings_available = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNo.choices]
+    )
+    has_help_at_home = factory.Faker(
+        "random_element", elements=[value for value, _ in YesNo.choices]
     )
