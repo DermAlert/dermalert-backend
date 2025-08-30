@@ -1,0 +1,1 @@
+from .wound import WoundSerializer

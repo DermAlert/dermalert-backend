@@ -14,14 +14,16 @@ class Wound(SkinForms):
     Model representing a wound.
     """
 
-    # Parent relation: each wound belongs to a SkinCondition (and thus a user)
+    # Parent relation (nested under a SkinCondition)
     skin_condition = models.ForeignKey(
-        SkinCondition, on_delete=models.CASCADE, related_name="wounds"
+        SkinCondition,
+        on_delete=models.CASCADE,
+        related_name="wounds",
     )
 
-    # Wound dimensions
-    height_mm = models.IntegerField()
-    width_mm = models.IntegerField()
+    # Wound dimensions (stored in millimeters, computed in cm for scoring)
+    height_mm = models.PositiveIntegerField()
+    width_mm = models.PositiveIntegerField()
 
     # Wound characteristics
     wound_edges = models.CharField(
@@ -44,23 +46,23 @@ class Wound(SkinForms):
     )
 
     # Signs of infection
-    increased_pain = models.BooleanField()
-    perilesional_erythema = models.BooleanField()
-    perilesional_edema = models.BooleanField()
-    heat_or_warm_skin = models.BooleanField()
-    increased_exudate = models.BooleanField()
-    purulent_exudate = models.BooleanField()
-    friable_tissue = models.BooleanField()
-    stagnant_wound = models.BooleanField()
-    biofilm_compatible_tissue = models.BooleanField()
-    odor = models.BooleanField()
-    hypergranulation = models.BooleanField()
-    wound_size_increase = models.BooleanField()
-    satallite_lesions = models.BooleanField()
-    grayish_wound_bed = models.BooleanField()
+    increased_pain = models.BooleanField(default=False)
+    perilesional_erythema = models.BooleanField(default=False)
+    perilesional_edema = models.BooleanField(default=False)
+    heat_or_warm_skin = models.BooleanField(default=False)
+    increased_exudate = models.BooleanField(default=False)
+    purulent_exudate = models.BooleanField(default=False)
+    friable_tissue = models.BooleanField(default=False)
+    stagnant_wound = models.BooleanField(default=False)
+    biofilm_compatible_tissue = models.BooleanField(default=False)
+    odor = models.BooleanField(default=False)
+    hypergranulation = models.BooleanField(default=False)
+    wound_size_increase = models.BooleanField(default=False)
+    satallite_lesions = models.BooleanField(default=False)
+    grayish_wound_bed = models.BooleanField(default=False)
 
     # Total score for the wound
-    total_score = models.IntegerField()
+    total_score = models.IntegerField(editable=False)
 
     def __str__(self):
         return f"Wound {self.id} with total score {self.total_score}"
@@ -83,8 +85,10 @@ class Wound(SkinForms):
 
     def get_total_score(self) -> int:
         """Retorna a soma de todos os itens (1 a 6)."""
-
-        item1 = LesionDimension.get_points(float(self.height_mm), float(self.width_mm))
+        # Convert stored dimensions from mm to cm for scoring
+        height_cm = float(self.height_mm) / 10.0
+        width_cm = float(self.width_mm) / 10.0
+        item1 = LesionDimension.get_points(height_cm, width_cm)
         item2 = DepthOfTissueInjury.get_points(self.depth_of_tissue_injury)
         item3 = WoundEdges.get_points(self.wound_edges)
         item4 = WoundBedTissue.get_points(self.wound_bed_tissue)
@@ -117,3 +121,5 @@ class Wound(SkinForms):
         ]
 
         return sum(getattr(self, field) for field in fields)
+
+    
