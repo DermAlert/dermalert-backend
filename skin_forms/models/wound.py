@@ -1,4 +1,4 @@
-from skin_forms.models.base_form import BaseForm, models
+from skin_forms.models.base_form import SkinForms, models
 from skin_forms.enums.wound import (
     WoundEdges,
     WoundBedTissue,
@@ -8,7 +8,7 @@ from skin_forms.enums.wound import (
 )
 
 
-class Wound(BaseForm):
+class Wound(SkinForms):
     """
     Model representing a wound.
     """

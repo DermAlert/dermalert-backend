@@ -1,7 +1,7 @@
 from core.models import BaseModel, models
 
 
-class BaseForm(BaseModel):
+class SkinForms(BaseModel):
     """
     Wound model to store wound information.
     """

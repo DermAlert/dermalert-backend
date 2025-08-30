@@ -4,6 +4,7 @@ from core.models import BaseModel, models
 from skin_forms.enums.image import ImageType
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from .base_form import SkinForms
 
 
 def images_upload_to(instance, filename):
@@ -28,11 +29,7 @@ class Image(BaseModel):
     """
     Model representing an image.
     """
-
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    form = GenericForeignKey("content_type", "object_id")
-
+    skin_form_id = models.ForeignKey(SkinForms, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=images_upload_to)
     image_type = models.CharField(
         max_length=50, choices=ImageType.choices, default=ImageType.DERMOSCOPIC

@@ -1,7 +1,7 @@
-from skin_forms.models.base_form import BaseForm, models
+from skin_forms.models.base_form import SkinForms, models
 
 
-class Cancer(BaseForm):
+class Cancer(SkinForms):
     """
     Model representing a cancer.
     """
