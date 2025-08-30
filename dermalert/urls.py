@@ -22,7 +22,7 @@ from profile_forms.views import (
     CareAccessSupportSingletonViewSet,
 )
 from skin_conditions.views import SkinConditionNestedViewSet
-from skin_forms.views import WoundViewSet, ImageViewSet
+from skin_forms.views import WoundNestedViewSet, ImageViewSet
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
@@ -50,7 +50,6 @@ router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"patients", PatientViewSet, basename="patient")
 router.register(r"addresses", AddressViewSet, basename="address")
-router.register(r"wounds", WoundViewSet, basename="wound")
 router.register(r"images", ImageViewSet, basename="image")
 
 patient_router = nrouters.NestedSimpleRouter(router, r"patients", lookup="user")
@@ -109,6 +108,14 @@ patient_router.register(
     SkinConditionNestedViewSet,
     basename="patient-skin-conditions",
 )
+skin_condition_router = nrouters.NestedSimpleRouter(
+    patient_router, r"skin-conditions", lookup="skin_condition"
+)
+skin_condition_router.register(
+    r"wounds",
+    WoundNestedViewSet,
+    basename="patient-skin-condition-wounds",
+)
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/api/", permanent=False)),
@@ -116,6 +123,7 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/v1/", include(router.urls)),
     path("api/v1/", include(patient_router.urls)),
+    path("api/v1/", include(skin_condition_router.urls)),
     path("api/v1/allergies/", AllergyListView.as_view(), name="allergy-list"),
     path("api/v1/medicines/", MedicineListView.as_view(), name="medicine-list"),
     path(

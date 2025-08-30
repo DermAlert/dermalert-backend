@@ -3,6 +3,7 @@ from typing import List
 from rest_framework import serializers
 
 from skin_forms.models import Wound
+from skin_conditions.models import SkinCondition
 from skin_forms.models.image import Image
 from django.contrib.contenttypes.models import ContentType
 from skin_forms.enums.image import ImageType
@@ -33,6 +34,7 @@ class WoundSerializer(serializers.ModelSerializer):
 		model = Wound
 		fields = [
 			"id",
+			"skin_condition",
 			# measures
 			"height_mm",
 			"width_mm",
@@ -66,7 +68,7 @@ class WoundSerializer(serializers.ModelSerializer):
 			# output
 			"attachments",
 		]
-		read_only_fields = ["id", "total_score", "attachments"]
+		read_only_fields = ["id", "total_score", "attachments", "skin_condition"]
 
 	def create(self, validated_data):
 		# Safely extract images from validated_data or request.FILES
@@ -84,7 +86,9 @@ class WoundSerializer(serializers.ModelSerializer):
 			files = request.FILES.getlist("images")
 			if files:
 				images = list(files)
-		wound: Wound = super().create(validated_data)
+		# Parent comes from view context (URL kwarg)
+		sc: SkinCondition = self.context["skin_condition"]
+		wound: Wound = Wound.objects.create(skin_condition=sc, **validated_data)
 		ct = ContentType.objects.get_for_model(Wound)
 		for img in images:
 			Image.objects.create(

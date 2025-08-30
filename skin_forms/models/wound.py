@@ -1,4 +1,5 @@
 from skin_forms.models.base_form import SkinForms, models
+from skin_conditions.models import SkinCondition
 from skin_forms.enums.wound import (
     WoundEdges,
     WoundBedTissue,
@@ -12,6 +13,11 @@ class Wound(SkinForms):
     """
     Model representing a wound.
     """
+
+    # Parent relation: each wound belongs to a SkinCondition (and thus a user)
+    skin_condition = models.ForeignKey(
+        SkinCondition, on_delete=models.CASCADE, related_name="wounds"
+    )
 
     # Wound dimensions
     height_mm = models.IntegerField()
@@ -64,6 +70,7 @@ class Wound(SkinForms):
         verbose_name_plural = "Wounds"
         indexes = [
             models.Index(fields=["id"]),
+            models.Index(fields=["skin_condition"]),
         ]
 
     def save(self, *args, **kwargs):

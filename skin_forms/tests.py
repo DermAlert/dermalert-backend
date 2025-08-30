@@ -10,6 +10,8 @@ from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
 from skin_forms.models import Wound
+from skin_conditions.models import SkinCondition
+from accounts.tests.factories import PatientFactory
 
 
 register(UserFactory)
@@ -26,7 +28,12 @@ def make_test_image(filename: str = "img.jpg", size=(10, 10), color=(255, 0, 0))
 @pytest.mark.django_db(transaction=True)
 class TestWoundAPI:
 	def test_create_wound_with_multiple_images(self, api_client: APIClient):
-		url = reverse("wound-list")
+		# cria skin condition parent (relacionada a um usuário/paciente)
+		sc = SkinCondition.objects.create(user=UserFactory.create(), location="face", description="SC")
+		url = reverse(
+			"patient-skin-condition-wounds-list",
+			kwargs={"user_pk": sc.user.id, "skin_condition_pk": sc.id},
+		)
 		payload = {
 			"height_mm": 10,
 			"width_mm": 20,
@@ -57,13 +64,26 @@ class TestWoundAPI:
 		assert len(response.data["attachments"]) == 2
 
 		# Recupera detalhe e confere attachments
-		detail = api_client.get(reverse("wound-detail", kwargs={"pk": wound_id}))
+		detail = api_client.get(
+			reverse(
+				"patient-skin-condition-wounds-detail",
+				kwargs={
+					"user_pk": sc.user.id,
+					"skin_condition_pk": sc.id,
+					"pk": wound_id,
+				},
+			)
+		)
 		assert detail.status_code == 200
 		assert len(detail.data["attachments"]) == 2
 
 	def test_upload_images_action(self, api_client: APIClient):
 		# Cria um wound sem imagens
-		url = reverse("wound-list")
+		sc = SkinCondition.objects.create(user=UserFactory.create(), location="face", description="SC")
+		url = reverse(
+			"patient-skin-condition-wounds-list",
+			kwargs={"user_pk": sc.user.id, "skin_condition_pk": sc.id},
+		)
 		payload = {
 			"height_mm": 5,
 			"width_mm": 5,
@@ -91,7 +111,10 @@ class TestWoundAPI:
 		wound_id = res.data["id"]
 
 		# Faz upload de 2 imagens via action
-		action_url = reverse("wound-upload-images", kwargs={"pk": wound_id})
+		action_url = reverse(
+			"patient-skin-condition-wounds-upload-images",
+			kwargs={"user_pk": sc.user.id, "skin_condition_pk": sc.id, "pk": wound_id},
+		)
 		payload = {
 			"image_type": "dermoscopic",
 			"images": [make_test_image("x.jpg"), make_test_image("y.jpg")],
@@ -101,6 +124,15 @@ class TestWoundAPI:
 		assert len(up.data) == 2
 
 		# Detalhe deve agora ter 2 attachments
-		detail = api_client.get(reverse("wound-detail", kwargs={"pk": wound_id}))
+		detail = api_client.get(
+			reverse(
+				"patient-skin-condition-wounds-detail",
+				kwargs={
+					"user_pk": sc.user.id,
+					"skin_condition_pk": sc.id,
+					"pk": wound_id,
+				},
+			)
+		)
 		assert detail.status_code == 200
 		assert len(detail.data["attachments"]) == 2
