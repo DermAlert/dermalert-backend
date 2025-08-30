@@ -1,5 +1,5 @@
 from django.contrib import admin
-from skin_forms.models import Wound
+from skin_forms.models import Wound, WoundImage
 
 
 @admin.register(Wound)
@@ -11,3 +11,8 @@ class WoundAdmin(admin.ModelAdmin):
 		"width_mm",
 		"total_score",
 	)
+
+
+@admin.register(WoundImage)
+class WoundImageAdmin(admin.ModelAdmin):
+	list_display = ("id", "wound_id", "image")
