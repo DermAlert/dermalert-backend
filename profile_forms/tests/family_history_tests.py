@@ -30,8 +30,7 @@ class TestFamilyHistoryAPI:
         data = {
             "family_history": [{"name": "Mãe"}, {"name": "Pai"}],
             "family_history_types": [{"name": "Melanoma"}],
-            "patient_cancer_type": {"name": "Melanoma"},
-            "removed_injuries": True,
+            "patient_cancer_type": [{"name": "Melanoma"}],
             "injuries_treatment": [{"name": "Cirurgia excisional"}],
         }
         resp = api_client.post(url, data=data, format="json")
@@ -39,8 +38,7 @@ class TestFamilyHistoryAPI:
         assert resp.data["user"] == user.id
         assert len(resp.data["family_history"]) == 2
         assert len(resp.data["family_history_types"]) == 1
-        assert resp.data["patient_cancer_type"]["name"] == "Melanoma"
-        assert resp.data["removed_injuries"] is True
+        assert resp.data["patient_cancer_type"][0]["name"] == "Melanoma"
         assert len(resp.data["injuries_treatment"]) == 1
 
     def test_create_without_optional_lists(
@@ -48,14 +46,12 @@ class TestFamilyHistoryAPI:
     ):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
-        data = {
-            "removed_injuries": False,
-        }
+        data = {}
         resp = api_client.post(url, data=data, format="json")
         assert resp.status_code == 201
         assert resp.data["family_history"] == []
         assert resp.data["family_history_types"] == []
-        assert resp.data["patient_cancer_type"] is None
+        assert resp.data["patient_cancer_type"] == []
         assert resp.data["injuries_treatment"] == []
 
     def test_create_duplicate_for_same_user(
@@ -63,7 +59,7 @@ class TestFamilyHistoryAPI:
     ):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
-        data = {"removed_injuries": False}
+        data = {}
         first = api_client.post(url, data=data, format="json")
         assert first.status_code == 201
         second = api_client.post(url, data=data, format="json")
@@ -73,7 +69,7 @@ class TestFamilyHistoryAPI:
     def test_retrieve(self, api_client: APIClient, user_factory: UserFactory):
         user = user_factory.create()
         url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
-        create = api_client.post(url, data={"removed_injuries": True}, format="json")
+        create = api_client.post(url, data={}, format="json")
         assert create.status_code == 201
         get_resp = api_client.get(url)
         assert get_resp.status_code == 200
@@ -85,14 +81,13 @@ class TestFamilyHistoryAPI:
     # def test_update_lists(self, api_client: APIClient, user_factory: UserFactory):
     #     user = user_factory.create()
     #     url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
-    #     create = api_client.post(url, data={"removed_injuries": False}, format="json")
+    #     create = api_client.post(url, data={}, format="json")
     #     assert create.status_code == 201
     #     # PUT should replace lists
     #     update_data = {
     #         "family_history": [ {"name": "Irmã"} ],
     #         "family_history_types": [ {"name": "Carinoma Basocelular"} ],
     #         "patient_cancer_type": {"name": "Carinoma Espinocelular"},
-    #         "removed_injuries": True,
     #         "injuries_treatment": [ {"name": "Crioterapia"}, {"name": "Laser"} ],
     #     }
     #     put_resp = api_client.put(url, data=update_data, format="json")
@@ -106,17 +101,16 @@ class TestFamilyHistoryAPI:
     #     user = user_factory.create()
     #     url = reverse("patient-family-history-list", kwargs={"user_pk": user.id})
     #     create = api_client.post(url, data={
-    #         "patient_cancer_type": {"name": "Melanoma"},
-    #         "removed_injuries": False
-    #     }, format="json")
+    #         "patient_cancer_type": {"name": "Melanoma"}
+    # #     }, format="json")
     #     assert create.status_code == 201
-    #     put_resp = api_client.put(url, data={"removed_injuries": False, "patient_cancer_type": None}, format="json")
+    #     put_resp = api_client.put(url, data={"patient_cancer_type": None}, format="json")
     #     assert put_resp.status_code == 200
     #     assert put_resp.data["patient_cancer_type"] is None
 
     def test_nonexistent_user(self, api_client: APIClient):
         url = reverse("patient-family-history-list", kwargs={"user_pk": 999999})
-        resp = api_client.post(url, data={"removed_injuries": True}, format="json")
+        resp = api_client.post(url, data={}, format="json")
         assert resp.status_code == 404
 
     def test_retrieve_nonexistent_form(

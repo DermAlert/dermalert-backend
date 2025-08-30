@@ -69,10 +69,21 @@ class WoundSerializer(serializers.ModelSerializer):
 		read_only_fields = ["id", "total_score", "attachments"]
 
 	def create(self, validated_data):
-		images: List = validated_data.pop("images", [])
+		# Safely extract images from validated_data or request.FILES
+		raw_images = validated_data.pop("images", None)
 		image_type = validated_data.pop("image_type", ImageType.DERMOSCOPIC)
-		if not images and (request := self.context.get("request")) is not None:
-			images = request.FILES.getlist("images")
+		images: List = []
+		if raw_images is not None:
+			if isinstance(raw_images, (list, tuple)):
+				images = list(raw_images)
+			else:
+				images = [raw_images]
+		# Prefer files from request for multipart submissions
+		request = self.context.get("request")
+		if request is not None:
+			files = request.FILES.getlist("images")
+			if files:
+				images = list(files)
 		wound: Wound = super().create(validated_data)
 		ct = ContentType.objects.get_for_model(Wound)
 		for img in images:
@@ -83,10 +94,19 @@ class WoundSerializer(serializers.ModelSerializer):
 
 	def update(self, instance, validated_data):
 		# Optional support to upload more images when updating
-		images: List = validated_data.pop("images", [])
+		raw_images = validated_data.pop("images", None)
 		image_type = validated_data.pop("image_type", ImageType.DERMOSCOPIC)
-		if not images and (request := self.context.get("request")) is not None:
-			images = request.FILES.getlist("images")
+		images: List = []
+		if raw_images is not None:
+			if isinstance(raw_images, (list, tuple)):
+				images = list(raw_images)
+			else:
+				images = [raw_images]
+		request = self.context.get("request")
+		if request is not None:
+			files = request.FILES.getlist("images")
+			if files:
+				images = list(files)
 		instance = super().update(instance, validated_data)
 		ct = ContentType.objects.get_for_model(Wound)
 		for img in images:

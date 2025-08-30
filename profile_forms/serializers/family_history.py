@@ -26,7 +26,6 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
             "family_history",
             "family_history_types",
             "patient_cancer_type",
-            "removed_injuries",
             "injuries_treatment",
         ]
         read_only_fields = ("user",)
@@ -34,7 +33,7 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         relatives_data = validated_data.pop("family_history", [])
         family_types_data = validated_data.pop("family_history_types", [])
-        patient_type_data = validated_data.pop("patient_cancer_type", None)
+        patient_type_data = validated_data.pop("patient_cancer_type", [])
         treatments_data = validated_data.pop("injuries_treatment", [])
 
         instance = FamilyHistory.objects.create(**validated_data)
@@ -47,11 +46,9 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
             ct_obj, _ = CancerTypes.objects.get_or_create(name=ct["name"])
             instance.family_history_types.add(ct_obj)
 
-        if patient_type_data is not None:
-            ct_obj, _ = CancerTypes.objects.get_or_create(
-                name=patient_type_data["name"]
-            )
-            instance.patient_cancer_type = ct_obj
+        for pt in patient_type_data:
+            pt_obj, _ = CancerTypes.objects.get_or_create(name=pt["name"])
+            instance.patient_cancer_type.add(pt_obj)
 
         for tr in treatments_data:
             tr_obj, _ = InjuriesTreatment.objects.get_or_create(name=tr["name"])
