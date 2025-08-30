@@ -21,17 +21,10 @@ class FamilyHistory(BaseForm):
         blank=True,
         related_name="cancer_forms",
     )
-    patient_cancer_type = models.ForeignKey(
+    patient_cancer_type = models.ManyToManyField(
         "CancerTypes",
-        on_delete=models.SET_NULL,
-        null=True,
         blank=True,
         related_name="patient_forms",
-    )
-    removed_injuries = models.BooleanField(
-        default=False,
-        verbose_name="Removed Injuries",
-        help_text="Indicate if there are any removed injuries.",
     )
     injuries_treatment = models.ManyToManyField(
         "InjuriesTreatment",

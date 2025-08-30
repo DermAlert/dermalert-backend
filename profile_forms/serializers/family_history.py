@@ -15,7 +15,7 @@ from .listed_items import (
 class FamilyHistorySerializer(serializers.ModelSerializer):
     family_history = RelativesSerializer(many=True, required=False)
     family_history_types = CancerTypeSerializer(many=True, required=False)
-    patient_cancer_type = CancerTypeSerializer(required=False, allow_null=True)
+    patient_cancer_type = CancerTypeSerializer(many=True, required=False)
     injuries_treatment = InjuriesTreatmentSerializer(many=True, required=False)
 
     class Meta:
