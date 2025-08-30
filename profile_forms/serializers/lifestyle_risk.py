@@ -11,7 +11,6 @@ class LifestyleRiskSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "description",
             "long_periods_posture",
             "leg_foot_trauma",
             "smoking",

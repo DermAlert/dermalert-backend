@@ -11,7 +11,6 @@ class ClinicalHistorySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "description",
             "hypertension",
             "diabetes",
             "deep_vein_thrombosis",

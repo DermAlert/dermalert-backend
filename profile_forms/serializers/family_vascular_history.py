@@ -11,7 +11,6 @@ class FamilyVascularHistorySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "description",
             "family_leg_ulcers",
             "family_varicose_or_circulatory",
         ]

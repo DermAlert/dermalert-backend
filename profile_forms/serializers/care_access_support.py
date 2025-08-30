@@ -11,7 +11,6 @@ class CareAccessSupportSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "description",
             "has_dressings_available",
             "has_help_at_home",
         ]

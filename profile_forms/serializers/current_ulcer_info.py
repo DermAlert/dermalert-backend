@@ -11,7 +11,6 @@ class CurrentUlcerInfoSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "description",
             "how_long",
             "treated_elsewhere",
             "used_antibiotics",
