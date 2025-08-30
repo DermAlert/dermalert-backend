@@ -22,6 +22,7 @@ from profile_forms.views import (
     CareAccessSupportSingletonViewSet,
 )
 from skin_conditions.views import SkinConditionNestedViewSet
+from skin_forms.views import WoundViewSet, ImageViewSet
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
@@ -49,6 +50,8 @@ router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"patients", PatientViewSet, basename="patient")
 router.register(r"addresses", AddressViewSet, basename="address")
+router.register(r"wounds", WoundViewSet, basename="wound")
+router.register(r"images", ImageViewSet, basename="image")
 
 patient_router = nrouters.NestedSimpleRouter(router, r"patients", lookup="user")
 patient_router.register(

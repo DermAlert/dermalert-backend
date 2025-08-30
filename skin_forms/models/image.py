@@ -4,7 +4,6 @@ from core.models import BaseModel, models
 from skin_forms.enums.image import ImageType
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from .base_form import SkinForms
 
 
 def images_upload_to(instance, filename):
@@ -18,19 +17,34 @@ def images_upload_to(instance, filename):
 
     new_filename = f"{uuid.uuid4()}{ext}"
 
-    model_name = instance.skin_form_id._meta.model_name
-
-    return os.path.join(
-        "images", model_name, str(instance.skin_form_id_id), new_filename
+    # model name from content type (e.g., 'wound')
+    model_name = (
+        instance.content_type.model if getattr(instance, "content_type_id", None) else "skin_form"
     )
+
+    # object id is the target form id
+    target_id = getattr(instance, "object_id", None) or "unknown"
+
+    return os.path.join("images", model_name, str(target_id), new_filename)
 
 
 class Image(BaseModel):
     """
-    Model representing an image.
+    Model representing an image attached to any SkinForm via Generic FK.
     """
-    skin_form_id = models.ForeignKey(SkinForms, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    skin_form = GenericForeignKey("content_type", "object_id")
+
     image = models.ImageField(upload_to=images_upload_to)
     image_type = models.CharField(
         max_length=50, choices=ImageType.choices, default=ImageType.DERMOSCOPIC
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+    def __str__(self):
+        return f"Image {self.id} ({self.image_type}) for {self.content_type}:{self.object_id}"
