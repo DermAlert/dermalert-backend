@@ -1,30 +1,18 @@
+from core.models import BaseModel
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from ..enums import BodySite
+from django.conf import settings
 
 
-class SkinCondition(models.Model):
-    """
-    Model representing a skin condition.
-    """
+class SkinCondition(BaseModel):
+    """Model representing a skin condition with its location and description."""
 
-    class Location(models.TextChoices):
-        HEAD = "head", "Head"
-        NECK = "neck", "Neck"
-        BACK = "back", "Back"
-        CHEST = "chest", "Chest"
-        ABDOMEN = "abdomen", "Abdomen"
-        ARM = "arm", "Arm"
-        LEG = "leg", "Leg"
-        HAND = "hand", "Hand"
-        FOOT = "foot", "Foot"
-
-    id = models.UUIDField(primary_key=True, editable=False)
-    user_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
-    location = models.CharField(
-        _("skin_location"), max_length=50, choices=Location.choices
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="skin_conditions",
     )
-    reference = models.CharField(_("reference"), max_length=255, null=True, blank=True)
-    day_discovery = models.DateField()
-
-    def __str__(self):
-        return f"SkinCondition {self.id} for User {self.user_id}"
+    location = models.CharField(
+        max_length=128, choices=BodySite.choices, verbose_name="Body Site"
+    )
+    description = models.TextField(verbose_name="Description")

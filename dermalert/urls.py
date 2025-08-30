@@ -21,6 +21,7 @@ from profile_forms.views import (
     CurrentUlcerInfoSingletonViewSet,
     CareAccessSupportSingletonViewSet,
 )
+from skin_conditions.views import SkinConditionNestedViewSet
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
@@ -99,6 +100,11 @@ patient_router.register(
     r"forms/care-access-support",
     CareAccessSupportSingletonViewSet,
     basename="patient-care-access-support",
+)
+patient_router.register(
+    r"skin-conditions",
+    SkinConditionNestedViewSet,
+    basename="patient-skin-conditions",
 )
 
 urlpatterns = [
