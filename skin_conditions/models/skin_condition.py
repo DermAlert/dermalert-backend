@@ -15,4 +15,4 @@ class SkinCondition(BaseModel):
     location = models.CharField(
         max_length=128, choices=BodySite.choices, verbose_name="Body Site"
     )
-    description = models.TextField(verbose_name="Description")
+    description = models.TextField(verbose_name="Description", blank=True, null=True)

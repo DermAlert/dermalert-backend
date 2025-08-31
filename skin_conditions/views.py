@@ -4,7 +4,7 @@ from rest_framework import viewsets, mixins, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
 from skin_conditions.models import SkinCondition
-from skin_conditions.serializers import SkinConditionSerializer
+from skin_conditions.serializers import SkinConditionSerializer, SkinConditionDetailSerializer
 
 
 class SkinConditionNestedViewSet(
@@ -33,3 +33,8 @@ class SkinConditionNestedViewSet(
         user_id = self.kwargs["user_pk"]
         user = get_object_or_404(get_user_model(), id=user_id)
         serializer.save(user=user)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return SkinConditionDetailSerializer
+        return super().get_serializer_class()
