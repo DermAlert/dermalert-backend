@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from skin_forms.tests.factories import SkinConditionFactory, WoundFactory
+from skin_forms.tests.factories import SkinConditionFactory, WoundFactory, WoundImageFactory
 from skin_forms.enums.wound import (
     DepthOfTissueInjury,
     ExudateType,
@@ -48,6 +48,8 @@ class TestWoundNestedAPI:
         user = UserFactory()
         sc = self.create_skin_condition(user)
         wound = WoundFactory(skin_condition=sc)
+        # attach two images
+        WoundImageFactory.create_batch(2, wound=wound)
         url = reverse(
             "skin-condition-wounds-detail",
             kwargs={"user_pk": user.id, "skin_condition_pk": sc.id, "pk": wound.id},
@@ -55,6 +57,10 @@ class TestWoundNestedAPI:
         res = api_client.get(url)
         assert res.status_code == 200
         assert res.data["id"] == wound.id
+        # images should be present on retrieve
+        assert "images" in res.data
+        assert isinstance(res.data["images"], list)
+        assert len(res.data["images"]) == 2
 
     def test_negative_dimensions_fail(self, api_client: APIClient):
         user = UserFactory()

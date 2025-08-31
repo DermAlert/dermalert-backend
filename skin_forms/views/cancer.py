@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, permissions, viewsets
 
 from skin_forms.models import Cancer
-from skin_forms.serializers.cancer import CancerSerializer
+from skin_forms.serializers.cancer import CancerSerializer, CancerDetailSerializer
 from skin_conditions.models import SkinCondition
 
 
@@ -25,3 +25,8 @@ class SkinConditionCancerNestedViewSet(
         sc_id = self.kwargs.get("skin_condition_pk")
         sc = get_object_or_404(SkinCondition, id=sc_id)
         serializer.save(skin_condition=sc)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return CancerDetailSerializer
+        return super().get_serializer_class()

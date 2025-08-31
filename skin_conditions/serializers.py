@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from skin_conditions.models import SkinCondition
-from skin_forms.serializers import WoundSerializer, CancerSerializer
+from skin_forms.serializers import WoundDetailSerializer, CancerDetailSerializer
 
 
 class SkinConditionSerializer(serializers.ModelSerializer):
@@ -20,8 +20,8 @@ class SkinConditionSerializer(serializers.ModelSerializer):
 
 
 class SkinConditionDetailSerializer(SkinConditionSerializer):
-    wounds = WoundSerializer(many=True, read_only=True)
-    cancer_forms = CancerSerializer(many=True, read_only=True)
+    wounds = WoundDetailSerializer(many=True, read_only=True)
+    cancer_forms = CancerDetailSerializer(many=True, read_only=True)
 
     class Meta(SkinConditionSerializer.Meta):
         fields = SkinConditionSerializer.Meta.fields + [

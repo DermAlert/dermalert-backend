@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from skin_forms.models import Cancer
+from .image import CancerImageSerializer
 
 
 class CancerSerializer(serializers.ModelSerializer):
@@ -16,3 +17,10 @@ class CancerSerializer(serializers.ModelSerializer):
             "diameter",
             "evolution",
         ]
+
+
+class CancerDetailSerializer(CancerSerializer):
+    images = CancerImageSerializer(many=True, read_only=True)
+
+    class Meta(CancerSerializer.Meta):
+        fields = CancerSerializer.Meta.fields + ["images"]

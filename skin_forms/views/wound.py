@@ -3,7 +3,7 @@ from rest_framework import mixins, permissions, viewsets
 
 from skin_conditions.models import SkinCondition
 from skin_forms.models import Wound
-from skin_forms.serializers.wound import WoundSerializer
+from skin_forms.serializers.wound import WoundSerializer, WoundDetailSerializer
 
 
 class SkinConditionWoundNestedViewSet(
@@ -22,3 +22,8 @@ class SkinConditionWoundNestedViewSet(
         skin_condition_id = self.kwargs.get("skin_condition_pk")
         skin_condition = get_object_or_404(SkinCondition, id=skin_condition_id)
         serializer.save(skin_condition=skin_condition)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return WoundDetailSerializer
+        return super().get_serializer_class()

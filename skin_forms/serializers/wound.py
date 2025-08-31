@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from skin_forms.models import Wound
+from .image import WoundImageSerializer
 
 
 class WoundSerializer(serializers.ModelSerializer):
@@ -30,5 +31,12 @@ class WoundSerializer(serializers.ModelSerializer):
             "wound_size_increase",
             "satallite_lesions",
             "grayish_wound_bed",
-                        "total_score",
-                ]
+            "total_score",
+        ]
+
+
+class WoundDetailSerializer(WoundSerializer):
+    images = WoundImageSerializer(many=True, read_only=True)
+
+    class Meta(WoundSerializer.Meta):
+        fields = WoundSerializer.Meta.fields + ["images"]
