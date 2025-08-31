@@ -1,2 +1,4 @@
 from .wound import SkinConditionWoundNestedViewSet
-from .image import WoundImageNestedViewSet
+from .wound_image import WoundImageNestedViewSet
+from .cancer import SkinConditionCancerNestedViewSet
+from .cancer_image import CancerImageNestedViewSet

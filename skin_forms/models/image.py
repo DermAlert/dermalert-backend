@@ -1,6 +1,7 @@
 from core.models import BaseModel, models
 
 from .wound import Wound
+from .cancer import Cancer
 
 
 class WoundImage(BaseModel):
@@ -9,3 +10,11 @@ class WoundImage(BaseModel):
 
     def __str__(self) -> str:
         return f"WoundImage {self.id} for wound {self.wound_id}"
+
+
+class CancerImage(BaseModel):
+    cancer = models.ForeignKey(Cancer, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="cancer_images/")
+
+    def __str__(self) -> str:
+        return f"CancerImage {self.id} for cancer {self.cancer_id}"

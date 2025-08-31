@@ -3,8 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from skin_conditions.enums import BodySite
-from skin_conditions.models import SkinCondition
+from skin_forms.tests.factories import SkinConditionFactory, WoundFactory
 from skin_forms.enums.wound import (
     DepthOfTissueInjury,
     ExudateType,
@@ -17,9 +16,7 @@ from skin_forms.models import Wound
 @pytest.mark.django_db(transaction=True)
 class TestWoundNestedAPI:
     def create_skin_condition(self, user):
-        return SkinCondition.objects.create(
-            user=user, location=BodySite.FACE, description="test"
-        )
+        return SkinConditionFactory(user=user)
 
     def test_create_and_list(self, api_client: APIClient):
         user = UserFactory()
@@ -50,15 +47,7 @@ class TestWoundNestedAPI:
     def test_retrieve(self, api_client: APIClient):
         user = UserFactory()
         sc = self.create_skin_condition(user)
-        wound = Wound.objects.create(
-            skin_condition=sc,
-            height_mm=10,
-            width_mm=10,
-            wound_edges=WoundEdges.NO_EDGES,
-            wound_bed_tissue=WoundBedTissue.REGENERATED_SCARRED,
-            depth_of_tissue_injury=DepthOfTissueInjury.INTACT_SKIN,
-            exudate_type=ExudateType.DRY,
-        )
+        wound = WoundFactory(skin_condition=sc)
         url = reverse(
             "skin-condition-wounds-detail",
             kwargs={"user_pk": user.id, "skin_condition_pk": sc.id, "pk": wound.id},
