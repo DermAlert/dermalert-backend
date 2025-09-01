@@ -30,6 +30,7 @@ PROJECT_APPS = [
     "skin_forms",
     "health_unit",
     "profile_forms",
+    "consent_form",
 ]
 
 THIRD_PARTY_APPS = [

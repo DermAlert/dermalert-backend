@@ -26,6 +26,7 @@ from skin_forms.views.wound import SkinConditionWoundNestedViewSet
 from skin_forms.views.wound_image import WoundImageNestedViewSet
 from skin_forms.views.cancer import SkinConditionCancerNestedViewSet
 from skin_forms.views.cancer_image import CancerImageNestedViewSet
+from consent_form.views import ConsentTermViewSet, PatientConsentViewSet
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
@@ -53,6 +54,7 @@ router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"patients", PatientViewSet, basename="patient")
 router.register(r"addresses", AddressViewSet, basename="address")
+router.register(r"consent-terms", ConsentTermViewSet, basename="consent-terms")
 
 patient_router = nrouters.NestedSimpleRouter(router, r"patients", lookup="user")
 patient_router.register(
@@ -109,6 +111,11 @@ patient_router.register(
     r"skin-conditions",
     SkinConditionNestedViewSet,
     basename="patient-skin-conditions",
+)
+patient_router.register(
+    r"consent",
+    PatientConsentViewSet,
+    basename="patient-consent",
 )
 
 skin_condition_router = nrouters.NestedSimpleRouter(
