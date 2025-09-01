@@ -41,6 +41,11 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
 	def get_user(self):
 		return get_object_or_404(get_user_model(), id=self.kwargs.get("user_pk"))
 
+	def get_serializer_class(self):
+		if self.action == "sign":
+			return ConsentSignatureCreateSerializer
+		return super().get_serializer_class()
+
 	@action(detail=False, methods=["get"], url_path="needs-signature")
 	def needs_signature(self, request, *args, **kwargs):
 		user = self.get_user()
@@ -66,3 +71,4 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
 			return Response({"detail": "already signed"}, status=status.HTTP_400_BAD_REQUEST)
 		signature = serializer.save(user=user)
 		return Response(ConsentSignatureSerializer(signature).data, status=status.HTTP_201_CREATED)
+
