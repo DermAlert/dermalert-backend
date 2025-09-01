@@ -101,3 +101,25 @@ class TestWoundNestedAPI:
         assert res.status_code == 201
         w = Wound.objects.get(id=res.data["id"])
         assert w.skin_condition_id == sc1.id
+
+    def test_calculate_action_no_persist(self, api_client: APIClient):
+        user = UserFactory()
+        sc = self.create_skin_condition(user)
+        url = reverse(
+            "skin-condition-wounds-calculate",
+            kwargs={"user_pk": user.id, "skin_condition_pk": sc.id},
+        )
+        payload = {
+            "height_mm": 20,  # 2cm
+            "width_mm": 30,   # 3cm -> area=6 => item1=2
+            "wound_edges": WoundEdges.WELL_DEFINED,  # 2
+            "wound_bed_tissue": WoundBedTissue.GRANULATION,  # 2
+            "depth_of_tissue_injury": DepthOfTissueInjury.EPIDERMIS_DERMIS,  # 1
+            "exudate_type": ExudateType.MOIST,  # 0
+            # nenhum flag de infecção setado -> item6=0
+        }
+        res = api_client.post(url, payload, format="json")
+        assert res.status_code == 200
+        assert res.data["total_score"] == 7
+        assert "breakdown" in res.data
+        assert not Wound.objects.filter(skin_condition=sc).exists()
