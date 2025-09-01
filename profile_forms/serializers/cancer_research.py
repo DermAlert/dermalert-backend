@@ -12,7 +12,6 @@ class CancerResearchSerializer(serializers.ModelSerializer):
             "bleed_itch",
             "how_long",
             "lesion_aspect",
-            "doctor_assistance",
             "diagnosis",
         ]
         read_only_fields = ("user",)

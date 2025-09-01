@@ -21,7 +21,6 @@ class TestCancerResearchAPI:
             "bleed_itch": False,
             "how_long": HowLong.ONE_TO_THREE_MONTHS,
             "lesion_aspect": True,
-            "doctor_assistance": True,
             "diagnosis": "Benign nevus",
         }
         res = api_client.post(url, payload, format="json")
@@ -39,7 +38,6 @@ class TestCancerResearchAPI:
             "bleed_itch": False,
             "how_long": HowLong.LESS_THAN_ONE_MONTH,
             "lesion_aspect": False,
-            "doctor_assistance": False,
             "diagnosis": "",
         }
         first = api_client.post(url, payload, format="json")

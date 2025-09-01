@@ -15,7 +15,6 @@ class CancerResearch(BaseForm):
     bleed_itch = models.BooleanField(default=False)
     how_long = models.CharField(max_length=20, choices=HowLong.choices)
     lesion_aspect = models.BooleanField(default=False)
-    doctor_assistance = models.BooleanField(default=False)
     diagnosis = models.TextField(blank=True, null=True)
 
     def __str__(self):

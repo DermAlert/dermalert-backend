@@ -201,7 +201,6 @@ class CancerResearchFactory(factory.django.DjangoModelFactory):
         "random_element", elements=[value for value, _ in HowLong.choices]
     )
     lesion_aspect = factory.Faker("pybool")
-    doctor_assistance = factory.Faker("pybool")
     diagnosis = factory.Faker("sentence")
 
 
