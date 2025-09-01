@@ -114,3 +114,26 @@ class TestPhototypeAPI:
         assert res.status_code == 200
         assert res.data["id"] == pt.id
         assert res.data["user"] == pt.user.id
+
+    def test_calculate_action_no_persist(
+        self, api_client: APIClient, user_factory: UserFactory
+    ):
+        user = user_factory.create()
+        url = reverse("patient-phototype-calculate", kwargs={"user_pk": user.id})
+        payload = {
+            # Use uma combinação conhecida para cair em Class III (~24 pontos)
+            "skin_color": SkinColor.BEIGE,  # 8
+            "eyes_color": EyesColor.LIGHT_BROWN,  # 3
+            "hair_color": HairColor.BROWN,  # 2
+            "freckles": FrecklesAmount.FEW,  # 2
+            "sun_exposed": SunExposureReaction.BURNS_NO_PEEL,  # 4
+            "tanned_skin": TannedSkinAbility.OFTEN,  # 4
+            "sun_sensitive_skin": SunSensitivityFace.NORMAL,  # 2
+        }
+        res = api_client.post(url, payload, format="json")
+        assert res.status_code == 200
+        assert "score" in res.data and "phototype" in res.data
+        assert 17 <= res.data["score"] <= 25
+        assert res.data["phototype"] == PhototypeClass.III
+        # Garante que nada foi persistido
+        assert not Phototype.objects.filter(user=user).exists()

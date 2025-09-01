@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins, permissions
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 
 from profile_forms.models import Phototype
+from profile_forms.models.phototype import classify_phototype
 from profile_forms.serializers.phototype import PhototypeSerializer
 
 
@@ -42,3 +44,19 @@ class PhototypeSingletonViewSet(
         user_id = self.kwargs["user_pk"]
         user = get_object_or_404(get_user_model(), id=user_id)
         serializer.save(user=user)
+
+    @action(detail=False, methods=["post"], url_path="calculate")
+    def calculate(self, request, *args, **kwargs):
+        """POST /patients/{user_pk}/forms/phototype/calculate/
+        Recebe os campos do formulário, calcula o score e o tipo, e retorna sem persistir.
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        temp = Phototype(**serializer.validated_data)
+        total = temp.calculate_score()
+        ptype = classify_phototype(total)
+        return Response({
+            "score": total,
+            "phototype": ptype,
+            "phototype_display": getattr(ptype, "label", str(ptype)),
+        })
