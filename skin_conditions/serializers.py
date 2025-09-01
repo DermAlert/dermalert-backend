@@ -12,7 +12,7 @@ class SkinConditionSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "location",
-            "description",
+            "type",
             "created_at",
             "updated_at",
         ]

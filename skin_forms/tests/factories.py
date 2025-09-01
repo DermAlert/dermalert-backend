@@ -4,9 +4,7 @@ import factory
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
-from accounts.tests.factories import UserFactory
-from skin_conditions.enums import BodySite
-from skin_conditions.models import SkinCondition
+from skin_conditions.tests.factories import SkinConditionFactory
 from skin_forms.enums.wound import (
     DepthOfTissueInjury,
     ExudateType,
@@ -23,17 +21,6 @@ def _make_image_file(name="test.png", size=(16, 16), color=(155, 0, 0)):
     image.save(file_obj, "PNG")
     file_obj.seek(0)
     return SimpleUploadedFile(name, file_obj.read(), content_type="image/png")
-
-
-class SkinConditionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = SkinCondition
-
-    user = factory.SubFactory(UserFactory)
-    location = factory.Faker(
-        "random_element", elements=[value for value, _ in BodySite.choices]
-    )
-    description = factory.Faker("sentence")
 
 
 class WoundFactory(factory.django.DjangoModelFactory):

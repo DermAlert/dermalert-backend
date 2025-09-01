@@ -1,6 +1,6 @@
 from core.models import BaseModel
 from django.db import models
-from ..enums import BodySite
+from ..enums import BodySite, SkinConditionType
 from django.conf import settings
 
 
@@ -15,4 +15,6 @@ class SkinCondition(BaseModel):
     location = models.CharField(
         max_length=128, choices=BodySite.choices, verbose_name="Body Site"
     )
-    description = models.TextField(verbose_name="Description", blank=True, null=True)
+    type = models.CharField(
+        max_length=128, choices=SkinConditionType.choices, verbose_name="Skin Condition Type", default=SkinConditionType.WOUND
+    )

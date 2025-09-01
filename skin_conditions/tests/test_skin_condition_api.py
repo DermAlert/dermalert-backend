@@ -4,7 +4,7 @@ from pytest_factoryboy import register
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from skin_conditions.enums import BodySite
+from skin_conditions.enums import BodySite, SkinConditionType
 from skin_conditions.models import SkinCondition
 from .factories import SkinConditionFactory
 from skin_forms.tests.factories import WoundFactory, CancerFactory
@@ -18,7 +18,7 @@ class TestSkinConditionAPI:
     def test_create_and_list(self, api_client: APIClient, user_factory: UserFactory):
         user = user_factory.create()
         url_list = reverse("patient-skin-conditions-list", kwargs={"user_pk": user.id})
-        payload = {"location": BodySite.FACE, "description": "Small lesion"}
+        payload = {"location": BodySite.FACE, "type": SkinConditionType.WOUND}
         res = api_client.post(url_list, payload, format="json")
         assert res.status_code == 201
         res_list = api_client.get(url_list)

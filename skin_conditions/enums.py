@@ -26,3 +26,7 @@ class BodySite(models.TextChoices):
     THIGH = "extremities.thigh", "Thigh"
     LEG = "extremities.leg", "Leg"
     FOOT = "extremities.foot", "Foot"
+
+class SkinConditionType(models.TextChoices):
+    CANCER = "cancer", "Cancer"
+    WOUND = "wound", "Wound"
