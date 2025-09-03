@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from consent_form.models import ConsentTerm, ConsentSignature
+from consent_form.models import ConsentTerm
 
 
 def make_image(color=(255, 0, 0)):

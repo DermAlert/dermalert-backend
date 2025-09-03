@@ -10,7 +10,6 @@ from .factories import (
     InjuriesTreatmentFactory,
 )
 from profile_forms.models import (
-    FamilyHistory,
     Relatives,
     CancerTypes,
     InjuriesTreatment,

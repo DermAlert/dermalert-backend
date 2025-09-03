@@ -29,7 +29,6 @@ from skin_forms.views.cancer_image import CancerImageNestedViewSet
 from consent_form.views import ConsentTermViewSet, PatientConsentViewSet
 
 from debug_toolbar.toolbar import debug_toolbar_urls
-from django.conf import settings
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers as nrouters
 

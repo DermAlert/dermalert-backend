@@ -9,7 +9,6 @@ from .factories import (
     MedicineFactory,
     AllergyFactory,
 )
-from profile_forms.models import GeneralHealth
 from profile_forms.enums.general_health import PhysicalActivityFrequency
 
 register(GeneralHealthFactory)

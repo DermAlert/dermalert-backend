@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from profile_forms.models import ChronicDisease, Medicine, Allergy
 from profile_forms.models import (
-    ChronicDisease,
-    Medicine,
-    Allergy,
     Relatives,
     CancerTypes,
     InjuriesTreatment,

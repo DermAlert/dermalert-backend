@@ -4,7 +4,7 @@ from accounts.enums.gender import Gender
 from accounts.enums.permission_role import PermissionRole
 from health_unit.models import HealthUnit
 from address.models import Address
-from datetime import date, timedelta
+from datetime import timedelta
 
 
 class Command(BaseSeedCommand):
