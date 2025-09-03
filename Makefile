@@ -106,7 +106,5 @@ docs-deploy:
 docs-clean:
 	rm -rf site/
 
-# Apaga o banco de dados e sobe do zero
 reset-db:
 	docker compose -f docker-compose.dev.yml down -v
-	docker compose -f docker-compose.dev.yml up -d --remove-orphans
