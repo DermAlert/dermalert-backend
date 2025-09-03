@@ -10,6 +10,7 @@ class WoundSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "total_score", "skin_condition"]
         fields = [
             "id",
+            "created_at",
             "skin_condition",
             "height_mm",
             "width_mm",

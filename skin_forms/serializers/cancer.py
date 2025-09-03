@@ -10,6 +10,7 @@ class CancerSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "skin_condition"]
         fields = [
             "id",
+            "created_at",
             "skin_condition",
             "asymmetry",
             "border",
