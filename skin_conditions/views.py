@@ -4,7 +4,10 @@ from rest_framework import viewsets, mixins, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
 from skin_conditions.models import SkinCondition
-from skin_conditions.serializers import SkinConditionSerializer, SkinConditionDetailSerializer
+from skin_conditions.serializers import (
+    SkinConditionSerializer,
+    SkinConditionDetailSerializer,
+)
 
 
 class SkinConditionNestedViewSet(

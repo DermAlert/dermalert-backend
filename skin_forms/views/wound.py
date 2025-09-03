@@ -16,7 +16,10 @@ from skin_forms.serializers.wound import WoundSerializer, WoundDetailSerializer
 
 
 class SkinConditionWoundNestedViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
 ):
     serializer_class = WoundSerializer
     permission_classes = [permissions.AllowAny]

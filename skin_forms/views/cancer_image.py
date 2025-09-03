@@ -6,7 +6,10 @@ from skin_forms.serializers import CancerImageSerializer
 
 
 class CancerImageNestedViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
 ):
     serializer_class = CancerImageSerializer
     permission_classes = [permissions.AllowAny]

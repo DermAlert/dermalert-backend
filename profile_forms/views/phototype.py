@@ -55,8 +55,10 @@ class PhototypeSingletonViewSet(
         temp = Phototype(**serializer.validated_data)
         total = temp.calculate_score()
         ptype = classify_phototype(total)
-        return Response({
-            "score": total,
-            "phototype": ptype,
-            "phototype_display": getattr(ptype, "label", str(ptype)),
-        })
+        return Response(
+            {
+                "score": total,
+                "phototype": ptype,
+                "phototype_display": getattr(ptype, "label", str(ptype)),
+            }
+        )

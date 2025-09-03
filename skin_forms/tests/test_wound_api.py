@@ -3,7 +3,11 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from skin_forms.tests.factories import SkinConditionFactory, WoundFactory, WoundImageFactory
+from skin_forms.tests.factories import (
+    SkinConditionFactory,
+    WoundFactory,
+    WoundImageFactory,
+)
 from skin_forms.enums.wound import (
     DepthOfTissueInjury,
     ExudateType,
@@ -111,7 +115,7 @@ class TestWoundNestedAPI:
         )
         payload = {
             "height_mm": 20,  # 2cm
-            "width_mm": 30,   # 3cm -> area=6 => item1=2
+            "width_mm": 30,  # 3cm -> area=6 => item1=2
             "wound_edges": WoundEdges.WELL_DEFINED,  # 2
             "wound_bed_tissue": WoundBedTissue.GRANULATION,  # 2
             "depth_of_tissue_injury": DepthOfTissueInjury.EPIDERMIS_DERMIS,  # 1

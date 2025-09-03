@@ -1,5 +1,11 @@
 from skin_forms.models.base_form import SkinForms, models
-from skin_forms.enums.cancer import Asymmetry, Border, ColorVariation, Diameter, Evolution
+from skin_forms.enums.cancer import (
+    Asymmetry,
+    Border,
+    ColorVariation,
+    Diameter,
+    Evolution,
+)
 from skin_conditions.models import SkinCondition
 
 

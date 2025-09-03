@@ -39,7 +39,7 @@ class BodySite(models.TextChoices):
     FOOT_RIGHT = "extremities.foot_right", "Right foot"
     FOOT_LEFT = "extremities.foot_left", "Left foot"
 
+
 class SkinConditionType(models.TextChoices):
     CANCER = "cancer", "Cancer"
     WOUND = "wound", "Wound"
-

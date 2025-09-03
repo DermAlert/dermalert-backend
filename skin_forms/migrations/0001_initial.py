@@ -6,129 +6,416 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('skin_conditions', '0001_initial'),
+        ("skin_conditions", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Cancer',
+            name="Cancer",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('notes', models.TextField(blank=True, null=True)),
-                ('asymmetry', models.CharField(choices=[('symmetric', 'Sim, a lesão é simétrica (forma uniforme)'), ('asymmetric', 'Não, a lesão é assimétrica (uma metade é diferente da outra)')], default='symmetric', max_length=32)),
-                ('border', models.CharField(choices=[('regular_well_defined', 'Regulares e bem definidas'), ('irregular_poorly_defined', 'Irregulares, mal definidas, com contornos serrilhados ou borrados')], default='regular_well_defined', max_length=32)),
-                ('color_variation', models.CharField(choices=[('single_color', 'Uma única cor (ex: castanho claro ou escuro)'), ('three_or_more_colors', 'Três ou mais cores (ex: marrom, preto, vermelho, branco, azul)')], default='single_color', max_length=32)),
-                ('diameter', models.CharField(choices=[('under_6mm', 'Menor que 6 mm (menor que uma borracha de lápis)'), ('over_or_equal_6mm', 'Maior ou igual a 6 mm.')], default='under_6mm', max_length=32)),
-                ('evolution', models.CharField(choices=[('no_changes', 'Não houve mudanças perceptíveis nos últimos meses'), ('recent_changes', 'Houve mudança de forma, tamanho, cor, coceira ou sangramento recentemente')], default='no_changes', max_length=32)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_created_by', to=settings.AUTH_USER_MODEL)),
-                ('deleted_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_deleted_by', to=settings.AUTH_USER_MODEL)),
-                ('skin_condition', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='cancer_forms', to='skin_conditions.skincondition')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_updated_by', to=settings.AUTH_USER_MODEL)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("notes", models.TextField(blank=True, null=True)),
+                (
+                    "asymmetry",
+                    models.CharField(
+                        choices=[
+                            ("symmetric", "Sim, a lesão é simétrica (forma uniforme)"),
+                            (
+                                "asymmetric",
+                                "Não, a lesão é assimétrica (uma metade é diferente da outra)",
+                            ),
+                        ],
+                        default="symmetric",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "border",
+                    models.CharField(
+                        choices=[
+                            ("regular_well_defined", "Regulares e bem definidas"),
+                            (
+                                "irregular_poorly_defined",
+                                "Irregulares, mal definidas, com contornos serrilhados ou borrados",
+                            ),
+                        ],
+                        default="regular_well_defined",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "color_variation",
+                    models.CharField(
+                        choices=[
+                            (
+                                "single_color",
+                                "Uma única cor (ex: castanho claro ou escuro)",
+                            ),
+                            (
+                                "three_or_more_colors",
+                                "Três ou mais cores (ex: marrom, preto, vermelho, branco, azul)",
+                            ),
+                        ],
+                        default="single_color",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "diameter",
+                    models.CharField(
+                        choices=[
+                            (
+                                "under_6mm",
+                                "Menor que 6 mm (menor que uma borracha de lápis)",
+                            ),
+                            ("over_or_equal_6mm", "Maior ou igual a 6 mm."),
+                        ],
+                        default="under_6mm",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "evolution",
+                    models.CharField(
+                        choices=[
+                            (
+                                "no_changes",
+                                "Não houve mudanças perceptíveis nos últimos meses",
+                            ),
+                            (
+                                "recent_changes",
+                                "Houve mudança de forma, tamanho, cor, coceira ou sangramento recentemente",
+                            ),
+                        ],
+                        default="no_changes",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_created_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "deleted_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_deleted_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "skin_condition",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="cancer_forms",
+                        to="skin_conditions.skincondition",
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'ABCDE cancer form',
-                'verbose_name_plural': 'ABCDE cancer forms',
+                "verbose_name": "ABCDE cancer form",
+                "verbose_name_plural": "ABCDE cancer forms",
             },
         ),
         migrations.CreateModel(
-            name='CancerImage',
+            name="CancerImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('image', models.ImageField(upload_to='cancer_images/')),
-                ('cancer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='skin_forms.cancer')),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_created_by', to=settings.AUTH_USER_MODEL)),
-                ('deleted_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_deleted_by', to=settings.AUTH_USER_MODEL)),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_updated_by', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("image", models.ImageField(upload_to="cancer_images/")),
+                (
+                    "cancer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="skin_forms.cancer",
+                    ),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_created_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "deleted_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_deleted_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Wound',
+            name="Wound",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('notes', models.TextField(blank=True, null=True)),
-                ('height_mm', models.PositiveIntegerField()),
-                ('width_mm', models.PositiveIntegerField()),
-                ('wound_edges', models.CharField(choices=[('no_edges', 'Ausência de bordos da ferida'), ('diffuse', 'Difusos'), ('well_defined', 'Delimitados'), ('damaged', 'Danificados'), ('thickened', 'Espessados (“envelhecidos”, “evertidos”)')], default='no_edges', max_length=50)),
-                ('wound_bed_tissue', models.CharField(choices=[('regenerated_scarred', 'Tecido regenerado ou cicatrizado'), ('epithelialization', 'Tecido de epitelização'), ('granulation', 'Tecido de granulação'), ('devitalized_fibrinous', 'Tecido desvitalizado e/ou fibrinoso'), ('necrotic', 'Tecido necrosado (necrose seca ou úmida)')], default='regenerated_scarred', max_length=50)),
-                ('depth_of_tissue_injury', models.CharField(choices=[('intact_skin', 'Pele intacta ou cicatrizada'), ('epidermis_dermis', 'Atingimento de epiderme e derme'), ('hypodermis_subcutaneous', 'Atingimento de hipoderme ou tela subcutânea (tecido adiposo sem atingir fáscia muscular)'), ('muscle_tissue', 'Atingimento de tecido muscular'), ('bone_tissue', 'Atingimento de tecido ósseo e/ou tecidos anexos (tendões, ligamentos, cápsula articular) ou necrose negra')], default='intact_skin', max_length=50)),
-                ('exudate_type', models.CharField(choices=[('dry', 'Seco'), ('moist', 'Úmido'), ('wet', 'Molhado'), ('saturated', 'Saturado'), ('leakage', 'Com fuga de exsudato')], default='dry', max_length=50)),
-                ('increased_pain', models.BooleanField(default=False)),
-                ('perilesional_erythema', models.BooleanField(default=False)),
-                ('perilesional_edema', models.BooleanField(default=False)),
-                ('heat_or_warm_skin', models.BooleanField(default=False)),
-                ('increased_exudate', models.BooleanField(default=False)),
-                ('purulent_exudate', models.BooleanField(default=False)),
-                ('friable_tissue', models.BooleanField(default=False)),
-                ('stagnant_wound', models.BooleanField(default=False)),
-                ('biofilm_compatible_tissue', models.BooleanField(default=False)),
-                ('odor', models.BooleanField(default=False)),
-                ('hypergranulation', models.BooleanField(default=False)),
-                ('wound_size_increase', models.BooleanField(default=False)),
-                ('satallite_lesions', models.BooleanField(default=False)),
-                ('grayish_wound_bed', models.BooleanField(default=False)),
-                ('total_score', models.IntegerField(editable=False)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_created_by', to=settings.AUTH_USER_MODEL)),
-                ('deleted_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_deleted_by', to=settings.AUTH_USER_MODEL)),
-                ('skin_condition', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='wounds', to='skin_conditions.skincondition')),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_updated_by', to=settings.AUTH_USER_MODEL)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("notes", models.TextField(blank=True, null=True)),
+                ("height_mm", models.PositiveIntegerField()),
+                ("width_mm", models.PositiveIntegerField()),
+                (
+                    "wound_edges",
+                    models.CharField(
+                        choices=[
+                            ("no_edges", "Ausência de bordos da ferida"),
+                            ("diffuse", "Difusos"),
+                            ("well_defined", "Delimitados"),
+                            ("damaged", "Danificados"),
+                            ("thickened", "Espessados (“envelhecidos”, “evertidos”)"),
+                        ],
+                        default="no_edges",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "wound_bed_tissue",
+                    models.CharField(
+                        choices=[
+                            ("regenerated_scarred", "Tecido regenerado ou cicatrizado"),
+                            ("epithelialization", "Tecido de epitelização"),
+                            ("granulation", "Tecido de granulação"),
+                            (
+                                "devitalized_fibrinous",
+                                "Tecido desvitalizado e/ou fibrinoso",
+                            ),
+                            ("necrotic", "Tecido necrosado (necrose seca ou úmida)"),
+                        ],
+                        default="regenerated_scarred",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "depth_of_tissue_injury",
+                    models.CharField(
+                        choices=[
+                            ("intact_skin", "Pele intacta ou cicatrizada"),
+                            ("epidermis_dermis", "Atingimento de epiderme e derme"),
+                            (
+                                "hypodermis_subcutaneous",
+                                "Atingimento de hipoderme ou tela subcutânea (tecido adiposo sem atingir fáscia muscular)",
+                            ),
+                            ("muscle_tissue", "Atingimento de tecido muscular"),
+                            (
+                                "bone_tissue",
+                                "Atingimento de tecido ósseo e/ou tecidos anexos (tendões, ligamentos, cápsula articular) ou necrose negra",
+                            ),
+                        ],
+                        default="intact_skin",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "exudate_type",
+                    models.CharField(
+                        choices=[
+                            ("dry", "Seco"),
+                            ("moist", "Úmido"),
+                            ("wet", "Molhado"),
+                            ("saturated", "Saturado"),
+                            ("leakage", "Com fuga de exsudato"),
+                        ],
+                        default="dry",
+                        max_length=50,
+                    ),
+                ),
+                ("increased_pain", models.BooleanField(default=False)),
+                ("perilesional_erythema", models.BooleanField(default=False)),
+                ("perilesional_edema", models.BooleanField(default=False)),
+                ("heat_or_warm_skin", models.BooleanField(default=False)),
+                ("increased_exudate", models.BooleanField(default=False)),
+                ("purulent_exudate", models.BooleanField(default=False)),
+                ("friable_tissue", models.BooleanField(default=False)),
+                ("stagnant_wound", models.BooleanField(default=False)),
+                ("biofilm_compatible_tissue", models.BooleanField(default=False)),
+                ("odor", models.BooleanField(default=False)),
+                ("hypergranulation", models.BooleanField(default=False)),
+                ("wound_size_increase", models.BooleanField(default=False)),
+                ("satallite_lesions", models.BooleanField(default=False)),
+                ("grayish_wound_bed", models.BooleanField(default=False)),
+                ("total_score", models.IntegerField(editable=False)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_created_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "deleted_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_deleted_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "skin_condition",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="wounds",
+                        to="skin_conditions.skincondition",
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Wound',
-                'verbose_name_plural': 'Wounds',
+                "verbose_name": "Wound",
+                "verbose_name_plural": "Wounds",
             },
         ),
         migrations.CreateModel(
-            name='WoundImage',
+            name="WoundImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('image', models.ImageField(upload_to='wound_images/')),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_created_by', to=settings.AUTH_USER_MODEL)),
-                ('deleted_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_deleted_by', to=settings.AUTH_USER_MODEL)),
-                ('updated_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s_updated_by', to=settings.AUTH_USER_MODEL)),
-                ('wound', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='skin_forms.wound')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("image", models.ImageField(upload_to="wound_images/")),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_created_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "deleted_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_deleted_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "wound",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="skin_forms.wound",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddIndex(
-            model_name='cancer',
-            index=models.Index(fields=['id'], name='skin_forms__id_4c6338_idx'),
+            model_name="cancer",
+            index=models.Index(fields=["id"], name="skin_forms__id_4c6338_idx"),
         ),
         migrations.AddIndex(
-            model_name='cancer',
-            index=models.Index(fields=['skin_condition'], name='skin_forms__skin_co_26ebe8_idx'),
+            model_name="cancer",
+            index=models.Index(
+                fields=["skin_condition"], name="skin_forms__skin_co_26ebe8_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='wound',
-            index=models.Index(fields=['id'], name='skin_forms__id_3d260f_idx'),
+            model_name="wound",
+            index=models.Index(fields=["id"], name="skin_forms__id_3d260f_idx"),
         ),
         migrations.AddIndex(
-            model_name='wound',
-            index=models.Index(fields=['skin_condition'], name='skin_forms__skin_co_4f9085_idx'),
+            model_name="wound",
+            index=models.Index(
+                fields=["skin_condition"], name="skin_forms__skin_co_4f9085_idx"
+            ),
         ),
     ]

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('skin_conditions', '0001_initial'),
+        ("skin_conditions", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='skincondition',
-            name='description',
-            field=models.TextField(blank=True, null=True, verbose_name='Description'),
+            model_name="skincondition",
+            name="description",
+            field=models.TextField(blank=True, null=True, verbose_name="Description"),
         ),
     ]

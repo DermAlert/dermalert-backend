@@ -3,8 +3,18 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from skin_forms.enums.cancer import Asymmetry, Border, ColorVariation, Diameter, Evolution
-from skin_forms.tests.factories import SkinConditionFactory, CancerFactory, CancerImageFactory
+from skin_forms.enums.cancer import (
+    Asymmetry,
+    Border,
+    ColorVariation,
+    Diameter,
+    Evolution,
+)
+from skin_forms.tests.factories import (
+    SkinConditionFactory,
+    CancerFactory,
+    CancerImageFactory,
+)
 
 
 @pytest.mark.django_db(transaction=True)

@@ -52,7 +52,9 @@ class TestConsentAPI:
         res = api_client.post(url_sign, payload, format="multipart")
         assert res.status_code == 201
         # agora não precisa mais assinar a última
-        url_check = reverse("patient-consent-needs-signature", kwargs={"user_pk": user.id})
+        url_check = reverse(
+            "patient-consent-needs-signature", kwargs={"user_pk": user.id}
+        )
         res2 = api_client.get(url_check)
         assert res2.status_code == 200
         assert res2.data["needs_signature"] is False

@@ -12,7 +12,13 @@ from skin_forms.enums.wound import (
     WoundEdges,
 )
 from skin_forms.models import Wound, WoundImage, Cancer, CancerImage
-from skin_forms.enums.cancer import Asymmetry, Border, ColorVariation, Diameter, Evolution
+from skin_forms.enums.cancer import (
+    Asymmetry,
+    Border,
+    ColorVariation,
+    Diameter,
+    Evolution,
+)
 
 
 def _make_image_file(name="test.png", size=(16, 16), color=(155, 0, 0)):

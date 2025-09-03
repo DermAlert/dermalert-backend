@@ -121,5 +121,3 @@ class Wound(SkinForms):
         ]
 
         return sum(getattr(self, field) for field in fields)
-
-    

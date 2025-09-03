@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('skin_conditions', '0002_alter_skincondition_description'),
+        ("skin_conditions", "0002_alter_skincondition_description"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='skincondition',
-            name='description',
+            model_name="skincondition",
+            name="description",
         ),
         migrations.AddField(
-            model_name='skincondition',
-            name='type',
-            field=models.CharField(choices=[('cancer', 'Cancer'), ('wound', 'Wound')], default='wound', max_length=128, verbose_name='Skin Condition Type'),
+            model_name="skincondition",
+            name="type",
+            field=models.CharField(
+                choices=[("cancer", "Cancer"), ("wound", "Wound")],
+                default="wound",
+                max_length=128,
+                verbose_name="Skin Condition Type",
+            ),
         ),
     ]
