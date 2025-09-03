@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from core.minio_utils import (
     create_bucket_if_not_exists,
-    set_static_prefix_read_only,
+    set_read_only_prefixes,
     upload_test_file,
 )
 
@@ -16,7 +16,7 @@ class Command(BaseCommand):
     • (Opcional) Faz upload de um arquivo de teste
     """
 
-    help = "Cria bucket (se não existir) e aplica bucket-policy em static/*"
+    help = "Cria bucket (se não existir) e aplica bucket-policy em static/* e media/*"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -41,8 +41,8 @@ class Command(BaseCommand):
 
         # 2) policy
         if not opts["skip_policy"]:
-            self.stdout.write("‣ Aplicando bucket-policy em static/*… ", ending="")
-            set_static_prefix_read_only(bucket)
+            self.stdout.write("‣ Aplicando bucket-policy em static/* e media/*… ", ending="")
+            set_read_only_prefixes(bucket)
             self.stdout.write(self.style.SUCCESS("OK"))
 
         # 3) upload de teste

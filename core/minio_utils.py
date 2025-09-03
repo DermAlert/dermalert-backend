@@ -5,7 +5,7 @@ Ferramentas de integração com MinIO / S3
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Iterable
 
 import boto3
 from botocore.exceptions import ClientError
@@ -47,29 +47,42 @@ def create_bucket_if_not_exists(bucket: str | None = None) -> bool:
     return True
 
 
-def set_static_prefix_read_only(
-    bucket: str | None = None, prefix: str = "static/*"
+def set_read_only_prefixes(
+    bucket: str | None = None,
+    prefixes: Iterable[str] | None = None,
 ) -> None:
-    """
-    Aplica uma bucket-policy que libera leitura anônima no prefixo informado
-    (padrão: static/*). Idempotente – substitui ou cria a policy.
+    """Aplica bucket-policy de leitura anônima para uma lista de prefixes.
+
+    Observação: put_bucket_policy substitui a policy existente; portanto, esta
+    função consolida todos os prefixes em uma única policy.
     """
     bucket = bucket or settings.AWS_STORAGE_BUCKET_NAME
+    if prefixes is None:
+        static_prefix = getattr(settings, "AWS_LOCATION", "static")
+        media_prefix = getattr(settings, "AWS_MEDIA_LOCATION", "media")
+        prefixes = (f"{static_prefix}/*", f"{media_prefix}/*")
 
-    policy: dict[str, Any] = {
-        "Version": "2012-10-17",
-        "Statement": [
+    statements: list[dict[str, Any]] = []
+    for prefix in prefixes:
+        statements.append(
             {
                 "Effect": "Allow",
                 "Principal": {"AWS": ["*"]},
                 "Action": ["s3:GetObject"],
                 "Resource": [f"arn:aws:s3:::{bucket}/{prefix}"],
             }
-        ],
-    }
+        )
 
+    policy: dict[str, Any] = {"Version": "2012-10-17", "Statement": statements}
     client = create_minio_client()
     client.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
+
+
+def set_static_prefix_read_only(
+    bucket: str | None = None, prefix: str = "static/*"
+) -> None:
+    """Compat: aplica policy somente para um prefixo (estático)."""
+    set_read_only_prefixes(bucket=bucket, prefixes=[prefix])
 
 
 def upload_test_file() -> bool:

@@ -170,12 +170,15 @@ AWS_S3_ADDRESSING_STYLE = "path"
 AWS_S3_URL_PROTOCOL = os.getenv("AWS_S3_URL_PROTOCOL", "http:")
 AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "localhost:9000")
 AWS_LOCATION = os.getenv("AWS_LOCATION", "static")
+AWS_MEDIA_LOCATION = os.getenv("AWS_MEDIA_LOCATION", "media")
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = "public-read"
 
 STATIC_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_CUSTOM_DOMAIN = f"{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}"
+
+MEDIA_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_MEDIA_LOCATION}/"
 
 COMMON_S3_OPTS = {
     "bucket_name": AWS_STORAGE_BUCKET_NAME,
@@ -193,6 +196,11 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             **COMMON_S3_OPTS,
+            # Garante que uploads de mídia NÃO vão para o prefixo de estáticos
+            "location": AWS_MEDIA_LOCATION,
+            # Inclui domínio com bucket no path-style (MinIO)
+            "custom_domain": STATIC_CUSTOM_DOMAIN,
+            "url_protocol": AWS_S3_URL_PROTOCOL,
         },
     },
     "staticfiles": {
