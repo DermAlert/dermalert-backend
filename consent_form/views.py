@@ -9,6 +9,8 @@ from .serializers import (
     ConsentTermSerializer,
     ConsentSignatureSerializer,
     ConsentSignatureCreateSerializer,
+    NeedsSignatureResponseSerializer,
+    ConsentSignatureListItemSerializer,
 )
 
 
@@ -35,6 +37,7 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
       - POST  /patients/{user_pk}/consent/sign/ -> assina um termo específico com imagens
     """
 
+    serializer_class = NeedsSignatureResponseSerializer
     permission_classes = [permissions.AllowAny]
     pagination_class = None
 
@@ -44,23 +47,25 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if self.action == "sign":
             return ConsentSignatureCreateSerializer
-        return super().get_serializer_class()
+        if self.action == "signed_terms":
+            return ConsentSignatureListItemSerializer
+        return NeedsSignatureResponseSerializer
 
     @action(detail=False, methods=["get"], url_path="needs-signature")
     def needs_signature(self, request, *args, **kwargs):
         user = self.get_user()
         latest = ConsentTerm.objects.order_by("-version").first()
         if not latest:
-            return Response({"needs_signature": False, "reason": "no_terms"})
+            data = {"needs_signature": False, "reason": "no_terms"}
+            return Response(NeedsSignatureResponseSerializer(data).data)
         exists = ConsentSignature.objects.filter(
             user=user, term=latest, has_signed=True
         ).exists()
-        return Response(
-            {
-                "needs_signature": not exists,
-                "latest_term": ConsentTermSerializer(latest).data,
-            }
-        )
+        data = {
+            "needs_signature": not exists,
+            "latest_term": ConsentTermSerializer(latest).data,
+        }
+        return Response(NeedsSignatureResponseSerializer(data).data)
 
     @action(detail=False, methods=["post"], url_path="sign")
     def sign(self, request, *args, **kwargs):
@@ -77,3 +82,16 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
         return Response(
             ConsentSignatureSerializer(signature).data, status=status.HTTP_201_CREATED
         )
+
+    @action(detail=False, methods=["get"], url_path="signed-terms")
+    def signed_terms(self, request, *args, **kwargs):
+        """Lista todos os termos já assinados pelo usuário (mais recente primeiro)."""
+        user = self.get_user()
+        qs = (
+            ConsentSignature.objects.filter(user=user, has_signed=True)
+            .select_related("term")
+            .prefetch_related("images")
+            .order_by("-signed_at", "-term__version")
+        )
+        serializer = ConsentSignatureListItemSerializer(qs, many=True)
+        return Response(serializer.data)

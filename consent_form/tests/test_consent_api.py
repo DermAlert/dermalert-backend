@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from accounts.tests.factories import UserFactory
-from consent_form.models import ConsentTerm
+from consent_form.models import ConsentTerm, ConsentSignature
 
 
 def make_image(color=(255, 0, 0)):
@@ -68,3 +68,33 @@ class TestConsentAPI:
         assert first.status_code == 201
         second = api_client.post(url_sign, payload, format="multipart")
         assert second.status_code == 400
+
+    def test_list_signed_terms_sorted(self, api_client: APIClient):
+        user = UserFactory()
+        # cria três termos com versões diferentes
+        t1 = ConsentTerm.objects.create(version=1, url="https://example.com/t1.pdf")
+        t2 = ConsentTerm.objects.create(version=2, url="https://example.com/t2.pdf")
+        t3 = ConsentTerm.objects.create(version=3, url="https://example.com/t3.pdf")
+
+        # assina t1 e t2 (depois t2, para ter signed_at mais recente)
+        url_sign = reverse("patient-consent-sign", kwargs={"user_pk": user.id})
+        res1 = api_client.post(
+            url_sign, {"term": t1.id, "has_signed": True, "images": [make_image(), make_image()]}, format="multipart"
+        )
+        assert res1.status_code == 201
+        res2 = api_client.post(
+            url_sign, {"term": t2.id, "has_signed": True, "images": [make_image()]}, format="multipart"
+        )
+        assert res2.status_code == 201
+
+        # lista assinaturas
+        url_list = reverse("patient-consent-signed-terms", kwargs={"user_pk": user.id})
+        res = api_client.get(url_list)
+        assert res.status_code == 200
+        # deve retornar em ordem decrescente por signed_at (t2 antes de t1)
+        assert len(res.data) == 2
+        assert res.data[0]["term"]["version"] == 2
+        assert res.data[1]["term"]["version"] == 1
+        # inclui imagens enviadas
+        assert isinstance(res.data[0]["images"], list) and len(res.data[0]["images"]) == 1
+        assert isinstance(res.data[1]["images"], list) and len(res.data[1]["images"]) == 2

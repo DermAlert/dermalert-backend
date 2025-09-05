@@ -55,3 +55,17 @@ class ConsentSignatureCreateSerializer(serializers.ModelSerializer):
         ]
         ConsentSignatureImage.objects.bulk_create(objs)
         return signature
+
+class NeedsSignatureResponseSerializer(serializers.Serializer):
+    needs_signature = serializers.BooleanField()
+    latest_term = ConsentTermSerializer(required=False)
+    reason = serializers.CharField(required=False)
+
+
+class ConsentSignatureListItemSerializer(serializers.ModelSerializer):
+    term = ConsentTermSerializer()
+    images = ConsentSignatureImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ConsentSignature
+        fields = ["id", "term", "has_signed", "signed_at", "images"]
