@@ -38,6 +38,12 @@ SEED_COMMANDS = {
         "description": "Usuários, pacientes, trabalhos e sessões",
         "priority": 40,
     },
+    "seed_consent_terms": {
+        "app": "consent_form",
+        "dependencies": [],
+        "description": "Termos de consentimento",
+        "priority": 45,
+    },
     # Futuros seeds podem ser adicionados aqui seguindo o padrão
     # 'seed_consultations': {
     #     'app': 'consultations',
