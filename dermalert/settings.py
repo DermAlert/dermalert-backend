@@ -250,3 +250,19 @@ USERNAME_FIELD = "cpf"
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = []
+
+# Swagger/OpenAPI base URL & scheme control (for drf-yasg)
+# Configure via .env to force http/https and optional host/base path used by Swagger UI requests
+SWAGGER_SCHEME = os.getenv("SWAGGER_SCHEME", "http").strip()
+SWAGGER_HOST = os.getenv("SWAGGER_HOST", "").strip()  # e.g., "localhost:8000" or "api.example.com"
+SWAGGER_BASE_PATH = os.getenv("SWAGGER_BASE_PATH", "").strip()  # e.g., "/api/v1"
+
+SWAGGER_BASE_URL = None
+if SWAGGER_HOST:
+    # Compose full base URL used by drf-yasg schema generator and Swagger UI
+    SWAGGER_BASE_URL = f"{SWAGGER_SCHEME}://{SWAGGER_HOST}{SWAGGER_BASE_PATH}"
+
+# Optional: honor reverse proxy headers so request.is_secure() reflects X-Forwarded-Proto
+USE_X_FORWARDED_HOST = os.getenv("USE_X_FORWARDED_HOST", "False").lower() == "true"
+if os.getenv("TRUST_X_FORWARDED_PROTO", "False").lower() == "true":
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

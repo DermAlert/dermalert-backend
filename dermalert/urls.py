@@ -35,6 +35,29 @@ from rest_framework_nested import routers as nrouters
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
+from drf_yasg.generators import OpenAPISchemaGenerator
+
+
+class SettingsAwareSchemaGenerator(OpenAPISchemaGenerator):
+    """
+    Overrides the base URL used in schema based on SWAGGER_* settings.
+    """
+
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request=request, public=public)
+        # Force scheme/host/basePath when configured
+        if getattr(settings, "SWAGGER_SCHEME", None):
+            schema.schemes = [settings.SWAGGER_SCHEME]
+        if getattr(settings, "SWAGGER_BASE_URL", None):
+            # drf-yasg uses host and basePath
+            # Parse SWAGGER_BASE_URL into host + basePath
+            from urllib.parse import urlparse
+
+            parsed = urlparse(settings.SWAGGER_BASE_URL)
+            schema.host = parsed.netloc
+            schema.basePath = parsed.path or "/"
+        return schema
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -47,6 +70,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
+    generator_class=SettingsAwareSchemaGenerator,
 )
 
 router = DefaultRouter()
