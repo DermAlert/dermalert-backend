@@ -248,8 +248,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "accounts.User"
 USERNAME_FIELD = "cpf"
 
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOW_ALL_ORIGINS = os.getenv("CORS_ALLOW_ALL_ORIGINS", "True").lower() == "true"
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if os.getenv("CORS_ALLOWED_ORIGINS") else []
 
 # Swagger/OpenAPI base URL & scheme control (for drf-yasg)
 # Configure via .env to force http/https and optional host/base path used by Swagger UI requests
