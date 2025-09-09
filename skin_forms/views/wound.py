@@ -58,7 +58,7 @@ class SkinConditionWoundNestedViewSet(
         item4 = WoundBedTissue.get_points(temp.wound_bed_tissue)
         item5 = ExudateType.get_points(temp.exudate_type)
         item6 = temp.get_item6_points()
-        total = item1 + item2 + item3 + item4 + item5 + item6
+        total = temp.get_total_score()
 
         return Response(
             {
