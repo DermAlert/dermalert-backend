@@ -39,38 +39,3 @@ class SkinConditionWoundNestedViewSet(
         if self.action == "retrieve":
             return WoundDetailSerializer
         return super().get_serializer_class()
-
-    @action(detail=False, methods=["post"], url_path="calculate")
-    def calculate(self, request, *args, **kwargs):
-        """POST /patients/{user_pk}/skin-conditions/{skin_condition_pk}/wounds/calculate/
-        Valida os campos, calcula o total_score e retorna sem persistir.
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        temp = Wound(**serializer.validated_data)
-
-        height_cm = float(temp.height_mm) / 10.0
-        width_cm = float(temp.width_mm) / 10.0
-        item1 = LesionDimension.get_points(height_cm, width_cm)
-        item2 = DepthOfTissueInjury.get_points(temp.depth_of_tissue_injury)
-        item3 = WoundEdges.get_points(temp.wound_edges)
-        item4 = WoundBedTissue.get_points(temp.wound_bed_tissue)
-        item5 = ExudateType.get_points(temp.exudate_type)
-        item6 = temp.get_item6_points()
-        total = temp.get_total_score()
-
-        return Response(
-            {
-                "total_score": total,
-                "breakdown": {
-                    "lesion_dimension_points": item1,
-                    "depth_points": item2,
-                    "edges_points": item3,
-                    "bed_tissue_points": item4,
-                    "exudate_points": item5,
-                    "infection_flags_points": item6,
-                },
-                "dimension_area_cm2": height_cm * width_cm,
-            }
-        )

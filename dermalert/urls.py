@@ -23,6 +23,7 @@ from profile_forms.views import (
 )
 from skin_conditions.views import SkinConditionNestedViewSet
 from skin_forms.views.wound import SkinConditionWoundNestedViewSet
+from skin_forms.views.wound_calculate import WoundCalculateView
 from skin_forms.views.wound_image import WoundImageNestedViewSet
 from skin_forms.views.cancer import SkinConditionCancerNestedViewSet
 from skin_forms.views.cancer_image import CancerImageNestedViewSet
@@ -184,6 +185,7 @@ urlpatterns = [
     path("api/v1/", include(wound_router.urls)),
     path("api/v1/", include(cancer_router.urls)),
     path("api/v1/", include(skin_condition_router.urls)),
+    path("api/v1/wounds/calculate/", WoundCalculateView.as_view(), name="wound-calculate"),
     path("api/v1/allergies/", AllergyListView.as_view(), name="allergy-list"),
     path("api/v1/medicines/", MedicineListView.as_view(), name="medicine-list"),
     path(
