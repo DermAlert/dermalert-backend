@@ -11,6 +11,7 @@ from profile_forms.serializers.care_access_support import CareAccessSupportSeria
 
 class CareAccessSupportSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = CareAccessSupportSerializer

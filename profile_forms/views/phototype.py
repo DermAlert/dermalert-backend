@@ -13,6 +13,7 @@ from profile_forms.serializers.phototype import PhototypeSerializer
 
 class PhototypeSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """

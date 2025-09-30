@@ -13,6 +13,7 @@ from profile_forms.serializers.risk_protective_factors import (
 
 class RiskProtectiveFactorsSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = RiskProtectiveFactorsSerializer

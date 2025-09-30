@@ -11,6 +11,7 @@ from profile_forms.serializers.current_ulcer_info import CurrentUlcerInfoSeriali
 
 class CurrentUlcerInfoSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = CurrentUlcerInfoSerializer

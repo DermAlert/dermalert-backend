@@ -11,6 +11,7 @@ from profile_forms.serializers.lifestyle_risk import LifestyleRiskSerializer
 
 class LifestyleRiskSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """

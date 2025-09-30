@@ -22,6 +22,7 @@ from profile_forms.serializers.family_history import (
 
 class FamilyHistorySingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """

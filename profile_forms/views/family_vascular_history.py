@@ -13,6 +13,7 @@ from profile_forms.serializers.family_vascular_history import (
 
 class FamilyVascularHistorySingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """

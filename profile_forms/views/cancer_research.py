@@ -11,6 +11,7 @@ from profile_forms.serializers.cancer_research import CancerResearchSerializer
 
 class CancerResearchSingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = CancerResearchSerializer

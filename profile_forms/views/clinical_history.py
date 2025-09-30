@@ -11,6 +11,7 @@ from profile_forms.serializers.clinical_history import ClinicalHistorySerializer
 
 class ClinicalHistorySingletonViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     """
