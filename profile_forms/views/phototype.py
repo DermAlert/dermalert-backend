@@ -24,10 +24,15 @@ class PhototypeSingletonViewSet(
     serializer_class = PhototypeSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
+    queryset = Phototype.objects.all()
 
     def _get_object(self):
         user_id = self.kwargs["user_pk"]
         return get_object_or_404(Phototype, user__id=user_id)
+
+    def get_object(self):
+        """Override para usar user_pk dos kwargs ao invés do pk padrão"""
+        return self._get_object()
 
     def list(self, request, *args, **kwargs):
         obj = self._get_object()
