@@ -25,6 +25,7 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
             "user",
             "family_history",
             "family_history_types",
+            "removed_injuries",
             "patient_cancer_type",
             "injuries_treatment",
         ]

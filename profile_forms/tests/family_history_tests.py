@@ -29,6 +29,7 @@ class TestFamilyHistoryAPI:
         data = {
             "family_history": [{"name": "Mãe"}, {"name": "Pai"}],
             "family_history_types": [{"name": "Melanoma"}],
+            "removed_injuries": True,
             "patient_cancer_type": [{"name": "Melanoma"}],
             "injuries_treatment": [{"name": "Cirurgia excisional"}],
         }
@@ -39,6 +40,7 @@ class TestFamilyHistoryAPI:
         assert len(resp.data["family_history_types"]) == 1
         assert resp.data["patient_cancer_type"][0]["name"] == "Melanoma"
         assert len(resp.data["injuries_treatment"]) == 1
+        assert resp.data["removed_injuries"] is True
 
     def test_create_without_optional_lists(
         self, api_client: APIClient, user_factory: UserFactory

@@ -21,6 +21,7 @@ class FamilyHistory(BaseForm):
         blank=True,
         related_name="cancer_forms",
     )
+    removed_injuries = models.BooleanField(default=False)
     patient_cancer_type = models.ManyToManyField(
         "CancerTypes",
         blank=True,
