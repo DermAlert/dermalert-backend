@@ -79,13 +79,10 @@ class FamilyHistorySerializer(serializers.ModelSerializer):
                 instance.family_history_types.add(ct_obj)
 
         if patient_type_data is not None:
-            if patient_type_data:
-                ct_obj, _ = CancerTypes.objects.get_or_create(
-                    name=patient_type_data["name"]
-                )
-                instance.patient_cancer_type = ct_obj
-            else:
-                instance.patient_cancer_type = None
+            instance.patient_cancer_type.clear()
+            for pt in patient_type_data:
+                pt_obj, _ = CancerTypes.objects.get_or_create(name=pt["name"])
+                instance.patient_cancer_type.add(pt_obj)
 
         if treatments_data is not None:
             instance.injuries_treatment.clear()
