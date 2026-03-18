@@ -18,3 +18,10 @@ class Patient(BaseModel):
     )
     other_gender = models.CharField(max_length=50, blank=True, null=True)
     date_of_birth = models.DateField()
+    health_unit = models.ForeignKey(
+        "health_unit.HealthUnit",
+        on_delete=models.SET_NULL,
+        related_name="patients",
+        null=True,
+        blank=True,
+    )

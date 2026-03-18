@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 
 from profile_forms.models import CancerResearch
 from profile_forms.serializers.cancer_research import CancerResearchSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class CancerResearchSingletonViewSet(
@@ -15,7 +16,7 @@ class CancerResearchSingletonViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = CancerResearchSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = CancerResearch.objects.all()
 

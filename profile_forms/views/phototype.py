@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from profile_forms.models import Phototype
 from profile_forms.models.phototype import classify_phototype
 from profile_forms.serializers.phototype import PhototypeSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class PhototypeSingletonViewSet(
@@ -22,7 +23,7 @@ class PhototypeSingletonViewSet(
     """
 
     serializer_class = PhototypeSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = Phototype.objects.all()
 

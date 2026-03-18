@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from profile_forms.models import CurrentUlcerInfo
 from profile_forms.serializers.current_ulcer_info import CurrentUlcerInfoSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class CurrentUlcerInfoSingletonViewSet(
@@ -15,7 +16,7 @@ class CurrentUlcerInfoSingletonViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = CurrentUlcerInfoSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = CurrentUlcerInfo.objects.all()
 

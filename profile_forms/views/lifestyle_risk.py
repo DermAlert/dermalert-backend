@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from profile_forms.models import LifestyleRisk
 from profile_forms.serializers.lifestyle_risk import LifestyleRiskSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class LifestyleRiskSingletonViewSet(
@@ -20,7 +21,7 @@ class LifestyleRiskSingletonViewSet(
     """
 
     serializer_class = LifestyleRiskSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = LifestyleRisk.objects.all()
 

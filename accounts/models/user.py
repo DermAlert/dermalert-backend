@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Q
+from django.db.models.functions import Lower
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from core.models import BaseModel
@@ -43,3 +45,12 @@ class User(AbstractUser, BaseModel):
 
     USERNAME_FIELD = settings.USERNAME_FIELD
     objects = UserManager()
+
+    class Meta(AbstractUser.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                Lower("email"),
+                condition=~Q(email=""),
+                name="accounts_user_unique_email_ci",
+            )
+        ]

@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import BaseUserManager
+from accounts.validators import normalize_cpf
 
 
 class UserManager(BaseUserManager):
@@ -7,7 +8,7 @@ class UserManager(BaseUserManager):
     def create_user(self, cpf, password=None, **extra_fields):
         if not cpf:
             raise ValueError("O CPF é obrigatório")
-        user = self.model(cpf=cpf, **extra_fields)
+        user = self.model(cpf=normalize_cpf(cpf), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user

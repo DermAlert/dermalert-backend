@@ -9,6 +9,7 @@ from profile_forms.models import RiskProtectiveFactors
 from profile_forms.serializers.risk_protective_factors import (
     RiskProtectiveFactorsSerializer,
 )
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class RiskProtectiveFactorsSingletonViewSet(
@@ -17,7 +18,7 @@ class RiskProtectiveFactorsSingletonViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = RiskProtectiveFactorsSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = RiskProtectiveFactors.objects.all()
 

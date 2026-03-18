@@ -12,6 +12,7 @@ from .serializers import (
     NeedsSignatureResponseSerializer,
     ConsentSignatureListItemSerializer,
 )
+from accounts.permissions import ClinicalAccessPermission, PatientNestedResourcePermission
 
 
 class ConsentTermViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -19,7 +20,7 @@ class ConsentTermViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     queryset = ConsentTerm.objects.all()
     serializer_class = ConsentTermSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     pagination_class = None
 
     @action(detail=False, methods=["get"], url_path="latest")
@@ -38,7 +39,7 @@ class PatientConsentViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = NeedsSignatureResponseSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     pagination_class = None
 
     def get_user(self):

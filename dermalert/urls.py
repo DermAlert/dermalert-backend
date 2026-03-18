@@ -1,8 +1,26 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-from accounts.views import UserViewSet, PatientViewSet
+from accounts.views import (
+    ManagerViewSet,
+    ProfessionalAssignmentViewSet,
+    ProfessionalViewSet,
+    UserViewSet,
+    PatientViewSet,
+)
+from accounts.views.auth import (
+    ChangeEmailView,
+    ChangePasswordView,
+    CompleteRegistrationView,
+    CurrentUserView,
+    ForgotPasswordView,
+    LoginView,
+    LogoutView,
+    RegistrationInviteDetailView,
+    ResetPasswordView,
+)
 from address.views import AddressViewSet
+from health_unit.views import HealthUnitViewSet
 from profile_forms.views import (
     GeneralHealthSingletonViewSet,
     AllergyListView,
@@ -79,6 +97,15 @@ router.register(r"users", UserViewSet, basename="user")
 router.register(r"patients", PatientViewSet, basename="patient")
 router.register(r"addresses", AddressViewSet, basename="address")
 router.register(r"consent-terms", ConsentTermViewSet, basename="consent-terms")
+router.register(r"health-units", HealthUnitViewSet, basename="health-unit")
+router.register(r"health-center", HealthUnitViewSet, basename="health-center")
+router.register(
+    r"professional-assignments",
+    ProfessionalAssignmentViewSet,
+    basename="professional-assignment",
+)
+router.register(r"professionals", ProfessionalViewSet, basename="professional")
+router.register(r"managers", ManagerViewSet, basename="manager")
 
 patient_router = nrouters.NestedSimpleRouter(router, r"patients", lookup="user")
 patient_router.register(
@@ -179,6 +206,39 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/api/", permanent=False)),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
+    path("api/v1/auth/login/", LoginView.as_view(), name="auth-login"),
+    path("api/v1/auth/logout/", LogoutView.as_view(), name="auth-logout"),
+    path("api/v1/auth/me/", CurrentUserView.as_view(), name="auth-me"),
+    path(
+        "api/v1/auth/forgot-password/",
+        ForgotPasswordView.as_view(),
+        name="auth-forgot-password",
+    ),
+    path(
+        "api/v1/auth/reset-password/",
+        ResetPasswordView.as_view(),
+        name="auth-reset-password",
+    ),
+    path(
+        "api/v1/auth/change-password/",
+        ChangePasswordView.as_view(),
+        name="auth-change-password",
+    ),
+    path(
+        "api/v1/auth/change-email/",
+        ChangeEmailView.as_view(),
+        name="auth-change-email",
+    ),
+    path(
+        "api/v1/auth/invitations/<str:token>/",
+        RegistrationInviteDetailView.as_view(),
+        name="auth-invitation-detail",
+    ),
+    path(
+        "api/v1/auth/invitations/<str:token>/complete/",
+        CompleteRegistrationView.as_view(),
+        name="auth-invitation-complete",
+    ),
     path("api/v1/", include(router.urls)),
     path("api/v1/", include(patient_router.urls)),
     path("api/v1/", include(skin_condition_router.urls)),

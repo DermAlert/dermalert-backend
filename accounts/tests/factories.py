@@ -1,7 +1,12 @@
+from datetime import date, timedelta
+
 import factory
 from django.contrib.auth import get_user_model
-from accounts.models import Patient
+from accounts.models import Patient, Work
 from accounts.enums.gender import Gender
+from accounts.enums.permission_role import PermissionRole
+from address.models import Address
+from health_unit.models import HealthUnit
 
 User = get_user_model()
 
@@ -42,4 +47,42 @@ class PatientFactory(factory.django.DjangoModelFactory):
     gender = factory.Faker(
         "random_element", elements=[value for value, _ in Gender.choices]
     )
+    other_gender = factory.LazyAttribute(
+        lambda o: "Non-binary" if o.gender == Gender.OTHER else None
+    )
     date_of_birth = factory.Faker("date_of_birth", minimum_age=0, maximum_age=120)
+
+
+class AddressFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Address
+
+    cep = factory.Sequence(lambda n: f"{10000000 + n}")
+    country = "Brasil"
+    state = factory.Faker("estado_sigla", locale="pt_BR")
+    city = factory.Faker("city", locale="pt_BR")
+    neighborhood = factory.Faker("bairro", locale="pt_BR")
+    street = factory.Faker("street_name", locale="pt_BR")
+    number = factory.Sequence(lambda n: n + 1)
+    longitude = factory.Faker("longitude")
+    latitude = factory.Faker("latitude")
+
+
+class HealthUnitFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = HealthUnit
+
+    name = factory.Sequence(lambda n: f"Health Unit {n}")
+    email = factory.Sequence(lambda n: f"unit{n}@example.com")
+    address = factory.SubFactory(AddressFactory)
+
+
+class WorkFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Work
+
+    user = factory.SubFactory(UserFactory)
+    health_unit = factory.SubFactory(HealthUnitFactory)
+    permission_role = PermissionRole.TECHNICIAN
+    start_date = factory.LazyFunction(date.today)
+    end_date = factory.LazyFunction(lambda: date.today() + timedelta(days=30))

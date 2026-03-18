@@ -9,6 +9,7 @@ from profile_forms.models import FamilyVascularHistory
 from profile_forms.serializers.family_vascular_history import (
     FamilyVascularHistorySerializer,
 )
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class FamilyVascularHistorySingletonViewSet(
@@ -22,7 +23,7 @@ class FamilyVascularHistorySingletonViewSet(
     """
 
     serializer_class = FamilyVascularHistorySerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = FamilyVascularHistory.objects.all()
 

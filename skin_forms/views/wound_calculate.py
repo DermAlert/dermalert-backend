@@ -12,10 +12,11 @@ from skin_forms.enums.wound import (
     ExudateType,
 )
 from skin_forms.serializers.wound import WoundSerializer
+from accounts.permissions import ClinicalAccessPermission
 
 
 class WoundCalculateView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
 
     def post(self, request, *args, **kwargs):
         """POST /api/v1/wounds/calculate/

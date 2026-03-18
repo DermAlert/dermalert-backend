@@ -4,6 +4,7 @@ from rest_framework import mixins, permissions, viewsets
 from skin_forms.models import Cancer
 from skin_forms.serializers.cancer import CancerSerializer, CancerDetailSerializer
 from skin_conditions.models import SkinCondition
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class SkinConditionCancerNestedViewSet(
@@ -14,7 +15,7 @@ class SkinConditionCancerNestedViewSet(
 ):
     serializer_class = CancerSerializer
     queryset = Cancer.objects.select_related("skin_condition")
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     pagination_class = None
 
     def get_queryset(self):

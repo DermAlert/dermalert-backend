@@ -1,48 +1,69 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from address.serializer import AddressSerializer
+from accounts.validators import validate_cpf
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
     address = AddressSerializer(read_only=True)
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
         fields = (
+            "id",
             "cpf",
             "email",
             "name",
             "password",
             "address",
+            "is_active",
         )
-        read_only_fields = ("id", "is_staff", "is_admin")
+        read_only_fields = ("id", "address", "is_active")
         extra_kwargs = {
             "cpf": {"required": True},
         }
 
     def validate_cpf(self, value):
-        if not value.isdigit() or len(value) != 11:
-            raise serializers.ValidationError("CPF must be a 11-digit number.")
-        return value
+        try:
+            return validate_cpf(value)
+        except Exception as exc:
+            raise serializers.ValidationError(str(exc)) from exc
+
+    def validate_email(self, value):
+        email = (value or "").strip().lower()
+        queryset = User.objects.exclude(email="")
+        if self.instance is not None:
+            queryset = queryset.exclude(pk=self.instance.pk)
+
+        if email and queryset.filter(email__iexact=email).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+
+        return email
+
+    def validate(self, attrs):
+        if self.instance is None and not attrs.get("password"):
+            raise serializers.ValidationError({"password": "This field is required."})
+        return attrs
 
     def create(self, validated_data):
-        user, create = User.objects.get_or_create(
+        if User.objects.filter(cpf=validated_data["cpf"]).exists():
+            raise serializers.ValidationError({"cpf": "A user with that cpf already exists."})
+
+        return User.objects.create_user(
             cpf=validated_data["cpf"],
-            defaults={
-                "email": validated_data["email"],
-                "name": validated_data["name"],
-                "password": validated_data["password"],
-            },
+            password=validated_data["password"],
+            email=validated_data.get("email", ""),
+            name=validated_data["name"],
         )
 
-        # if user already exists, update the fields
-        if not create:
-            user.email = validated_data["email"]
-            user.name = validated_data["name"]
-            user.set_password(validated_data["password"])
-            user.save()
-
-        return user
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance

@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from profile_forms.models import CareAccessSupport
 from profile_forms.serializers.care_access_support import CareAccessSupportSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class CareAccessSupportSingletonViewSet(
@@ -15,7 +16,7 @@ class CareAccessSupportSingletonViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = CareAccessSupportSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = CareAccessSupport.objects.all()
 

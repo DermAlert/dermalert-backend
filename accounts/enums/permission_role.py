@@ -7,5 +7,6 @@ class PermissionRole(models.TextChoices):
     Enum representing the permission roles in the system.
     """
 
+    MANAGER = "manager", _("Manager")
     SUPERVISOR = "supervisor", _("Supervisor")
     TECHNICIAN = "technician", _("Technician")
