@@ -79,6 +79,9 @@ def get_user_health_unit_ids(user):
 
 
 def get_user_managed_health_unit_ids(user):
+    if not user or not user.is_authenticated:
+        return []
+
     if user_is_admin(user) or user_is_manager(user):
         return None
 

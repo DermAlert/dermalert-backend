@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils import timezone
@@ -11,11 +12,17 @@ from rest_framework.views import APIView
 
 from accounts.serializers.auth import (
     ChangeEmailSerializer,
+    ChangeEmailResponseSerializer,
     ChangePasswordSerializer,
+    ChangePasswordResponseSerializer,
     CompleteRegistrationSerializer,
+    CompleteRegistrationResponseSerializer,
     CurrentUserSerializer,
     ForgotPasswordSerializer,
+    LoginResponseSerializer,
     LoginSerializer,
+    MessageSerializer,
+    RegistrationInviteDetailSerializer,
     ResetPasswordSerializer,
 )
 from accounts.services import (
@@ -30,6 +37,10 @@ User = get_user_model()
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(
+        request_body=LoginSerializer,
+        responses={200: LoginResponseSerializer},
+    )
     def post(self, request):
         serializer = LoginSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
@@ -47,6 +58,7 @@ class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(responses={204: "No content"})
     def post(self, request):
         Token.objects.filter(user=request.user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -56,6 +68,7 @@ class CurrentUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(responses={200: CurrentUserSerializer})
     def get(self, request):
         return Response(CurrentUserSerializer(request.user).data)
 
@@ -63,6 +76,10 @@ class CurrentUserView(APIView):
 class ForgotPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(
+        request_body=ForgotPasswordSerializer,
+        responses={200: MessageSerializer},
+    )
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -85,6 +102,10 @@ class ForgotPasswordView(APIView):
 class ResetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(
+        request_body=ResetPasswordSerializer,
+        responses={200: MessageSerializer},
+    )
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -115,6 +136,10 @@ class ChangePasswordView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        request_body=ChangePasswordSerializer,
+        responses={200: ChangePasswordResponseSerializer},
+    )
     def post(self, request):
         serializer = ChangePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -143,6 +168,10 @@ class ChangeEmailView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        request_body=ChangeEmailSerializer,
+        responses={200: ChangeEmailResponseSerializer},
+    )
     def post(self, request):
         serializer = ChangeEmailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -173,6 +202,7 @@ class ChangeEmailView(APIView):
 class RegistrationInviteDetailView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(responses={200: RegistrationInviteDetailSerializer})
     def get(self, request, token):
         invite = get_invite_from_token(token)
         if invite is None or invite.is_deleted or not invite.is_active:
@@ -204,6 +234,10 @@ class RegistrationInviteDetailView(APIView):
 class CompleteRegistrationView(APIView):
     permission_classes = [permissions.AllowAny]
 
+    @swagger_auto_schema(
+        request_body=CompleteRegistrationSerializer,
+        responses={201: CompleteRegistrationResponseSerializer},
+    )
     def post(self, request, token):
         serializer = CompleteRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

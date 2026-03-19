@@ -92,7 +92,7 @@ ROOT_URLCONF = "dermalert.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -290,6 +290,22 @@ SWAGGER_BASE_URL = None
 if SWAGGER_HOST:
     # Compose full base URL used by drf-yasg schema generator and Swagger UI
     SWAGGER_BASE_URL = f"{SWAGGER_SCHEME}://{SWAGGER_HOST}{SWAGGER_BASE_PATH}"
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "PERSIST_AUTH": True,
+    "SECURITY_DEFINITIONS": {
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": (
+                'Use the Swagger "Authorize" button to log in with CPF/password '
+                'or paste a header value like: Token <your-token>'
+            ),
+        }
+    },
+}
 
 # Optional: honor reverse proxy headers so request.is_secure() reflects X-Forwarded-Proto
 USE_X_FORWARDED_HOST = os.getenv("USE_X_FORWARDED_HOST", "False").lower() == "true"

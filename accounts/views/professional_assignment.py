@@ -31,6 +31,9 @@ class ProfessionalAssignmentViewSet(viewsets.ModelViewSet):
     ordering = ["user__name"]
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return self.queryset.none()
+
         queryset = super().get_queryset()
         managed_ids = get_user_managed_health_unit_ids(self.request.user)
         if managed_ids is None:

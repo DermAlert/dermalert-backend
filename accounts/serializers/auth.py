@@ -6,7 +6,10 @@ from accounts.models import Work
 
 class LoginSerializer(serializers.Serializer):
     cpf = serializers.CharField()
-    password = serializers.CharField()
+    password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
 
     def validate(self, attrs):
         user = authenticate(
@@ -32,21 +35,36 @@ class ForgotPasswordSerializer(serializers.Serializer):
 class ResetPasswordSerializer(serializers.Serializer):
     uid = serializers.CharField()
     token = serializers.CharField()
-    new_password = serializers.CharField()
+    new_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    current_password = serializers.CharField()
-    new_password = serializers.CharField()
+    current_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
+    new_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
 
 
 class ChangeEmailSerializer(serializers.Serializer):
-    password = serializers.CharField()
+    password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
     new_email = serializers.EmailField()
 
 
 class CompleteRegistrationSerializer(serializers.Serializer):
-    password = serializers.CharField()
+    password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"},
+    )
 
 
 class CurrentUserSerializer(serializers.Serializer):
@@ -76,3 +94,43 @@ class CurrentUserSerializer(serializers.Serializer):
                 is_deleted=False,
             ).values_list("health_unit_id", flat=True)
         )
+
+
+class MessageSerializer(serializers.Serializer):
+    message = serializers.CharField(read_only=True)
+
+
+class LoginResponseSerializer(serializers.Serializer):
+    token = serializers.CharField(read_only=True)
+    user = CurrentUserSerializer(read_only=True)
+
+
+class ChangePasswordResponseSerializer(serializers.Serializer):
+    message = serializers.CharField(read_only=True)
+    token = serializers.CharField(read_only=True)
+
+
+class ChangeEmailResponseSerializer(serializers.Serializer):
+    message = serializers.CharField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+
+
+class RegistrationInviteHealthUnitSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+
+
+class RegistrationInviteDetailSerializer(serializers.Serializer):
+    name = serializers.CharField(read_only=True)
+    cpf = serializers.CharField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    health_unit = RegistrationInviteHealthUnitSerializer(read_only=True)
+    permission_role = serializers.CharField(read_only=True)
+
+
+class CompleteRegistrationResponseSerializer(serializers.Serializer):
+    message = serializers.CharField(read_only=True)
+    token = serializers.CharField(read_only=True)
+    user = CurrentUserSerializer(read_only=True)
+    assignment_id = serializers.IntegerField(read_only=True)
+    invite_id = serializers.IntegerField(read_only=True)

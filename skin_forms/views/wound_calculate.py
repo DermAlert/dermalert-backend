@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -18,6 +20,35 @@ from accounts.permissions import ClinicalAccessPermission
 class WoundCalculateView(APIView):
     permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
 
+    @swagger_auto_schema(
+        request_body=WoundSerializer,
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "total_score": openapi.Schema(type=openapi.TYPE_INTEGER),
+                    "breakdown": openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            "lesion_dimension_points": openapi.Schema(
+                                type=openapi.TYPE_INTEGER
+                            ),
+                            "depth_points": openapi.Schema(type=openapi.TYPE_INTEGER),
+                            "edges_points": openapi.Schema(type=openapi.TYPE_INTEGER),
+                            "bed_tissue_points": openapi.Schema(
+                                type=openapi.TYPE_INTEGER
+                            ),
+                            "exudate_points": openapi.Schema(type=openapi.TYPE_INTEGER),
+                            "infection_flags_points": openapi.Schema(
+                                type=openapi.TYPE_INTEGER
+                            ),
+                        },
+                    ),
+                    "dimension_area_cm2": openapi.Schema(type=openapi.TYPE_NUMBER),
+                },
+            )
+        },
+    )
     def post(self, request, *args, **kwargs):
         """POST /api/v1/wounds/calculate/
         Valida os campos, calcula o total_score e retorna sem persistir.
