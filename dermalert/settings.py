@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,7 +11,8 @@ SECRET_KEY = os.getenv(
     "django-insecure-4v@)8#r3&!$=5g1@)9^+q2j0z6b3@7xk#(4f!$=5g1@)9^+q2j0z6b3@7xk#",
 )
 
-DEBUG = os.getenv("DJANGO_DEBUG", "False")
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+TESTING = "pytest" in sys.modules
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0").split(
     ","
@@ -52,6 +54,7 @@ DJANGO_APPS = [
 
 DJANGO_REST_FRAMEWORK_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 INSTALLED_APPS = (
@@ -89,7 +92,7 @@ ROOT_URLCONF = "dermalert.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -214,8 +217,30 @@ STORAGES = {
     },
 }
 
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL",
+    EMAIL_HOST_USER or "no-reply@dermalert.local",
+)
+PASSWORD_RESET_URL_TEMPLATE = os.getenv(
+    "PASSWORD_RESET_URL_TEMPLATE",
+    "http://localhost:3000/reset-password?uid={uid}&token={token}",
+)
+REGISTRATION_INVITE_URL_TEMPLATE = os.getenv(
+    "REGISTRATION_INVITE_URL_TEMPLATE",
+    "http://localhost:3000/complete-registration?token={token}",
+)
 
-if not DEBUG:
+
+if not DEBUG and not TESTING:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
@@ -236,6 +261,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
     # Must be a list/tuple, not a single string
@@ -261,6 +290,22 @@ SWAGGER_BASE_URL = None
 if SWAGGER_HOST:
     # Compose full base URL used by drf-yasg schema generator and Swagger UI
     SWAGGER_BASE_URL = f"{SWAGGER_SCHEME}://{SWAGGER_HOST}{SWAGGER_BASE_PATH}"
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "PERSIST_AUTH": True,
+    "SECURITY_DEFINITIONS": {
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": (
+                'Use the Swagger "Authorize" button to log in with CPF/password '
+                'or paste a header value like: Token <your-token>'
+            ),
+        }
+    },
+}
 
 # Optional: honor reverse proxy headers so request.is_secure() reflects X-Forwarded-Proto
 USE_X_FORWARDED_HOST = os.getenv("USE_X_FORWARDED_HOST", "False").lower() == "true"

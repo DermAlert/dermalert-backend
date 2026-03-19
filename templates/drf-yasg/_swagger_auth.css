@@ -1,0 +1,136 @@
+.swagger-login-hidden {
+    display: none !important;
+}
+
+.swagger-login-modal.hidden {
+    display: none;
+}
+
+.swagger-login-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    font-family: Arial, sans-serif;
+}
+
+.swagger-login-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.swagger-login-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 420px);
+    margin: 8vh auto;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+    padding: 24px;
+}
+
+.swagger-login-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.swagger-login-modal__header h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.swagger-login-modal__close {
+    border: 0;
+    background: transparent;
+    color: #475569;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.swagger-login-modal__text {
+    margin: 0 0 16px;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.swagger-login-modal__label {
+    display: block;
+    margin: 14px 0 6px;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.swagger-login-modal__input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 11px 12px;
+    font-size: 14px;
+}
+
+.swagger-login-modal__input:focus {
+    outline: 2px solid #0ea5e9;
+    outline-offset: 1px;
+    border-color: #0ea5e9;
+}
+
+.swagger-login-modal__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.swagger-login-modal__primary,
+.swagger-login-modal__secondary {
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 14px;
+}
+
+.swagger-login-modal__primary {
+    background: #0284c7;
+    color: #ffffff;
+    width: 100%;
+}
+
+.swagger-login-modal__secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+    flex: 1;
+}
+
+.swagger-login-modal__divider {
+    margin: 18px 0 4px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.swagger-login-modal__status {
+    min-height: 20px;
+    margin: 14px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.swagger-login-modal__status.is-error {
+    color: #b91c1c;
+}
+
+.swagger-login-modal__status.is-success {
+    color: #15803d;
+}

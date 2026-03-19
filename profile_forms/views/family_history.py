@@ -18,6 +18,7 @@ from profile_forms.serializers.family_history import (
     CancerTypeSerializer,
     InjuriesTreatmentSerializer,
 )
+from accounts.permissions import ClinicalAccessPermission, PatientNestedResourcePermission
 
 
 class FamilyHistorySingletonViewSet(
@@ -31,7 +32,7 @@ class FamilyHistorySingletonViewSet(
     """
 
     serializer_class = FamilyHistorySerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = FamilyHistory.objects.all()
 
@@ -65,6 +66,7 @@ class FamilyHistorySingletonViewSet(
 class RelativesListView(generics.ListAPIView):
     queryset = Relatives.objects.all()
     serializer_class = RelativesSerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None
@@ -73,6 +75,7 @@ class RelativesListView(generics.ListAPIView):
 class CancerTypeListView(generics.ListAPIView):
     queryset = CancerTypes.objects.all()
     serializer_class = CancerTypeSerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None
@@ -81,6 +84,7 @@ class CancerTypeListView(generics.ListAPIView):
 class InjuriesTreatmentListView(generics.ListAPIView):
     queryset = InjuriesTreatment.objects.all()
     serializer_class = InjuriesTreatmentSerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None

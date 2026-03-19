@@ -1,5 +1,6 @@
 from core.models import BaseModel, models
 from accounts.enums.permission_role import PermissionRole
+from django.conf import settings
 
 
 class InviteWork(BaseModel):
@@ -8,7 +9,17 @@ class InviteWork(BaseModel):
     """
 
     hash = models.CharField(max_length=255, unique=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="invite_works",
+    )
+    name = models.CharField(max_length=255)
+    cpf = models.CharField(max_length=11)
     email = models.EmailField()
+    accepted_at = models.DateTimeField(null=True, blank=True)
 
     expires_at = models.DateTimeField(null=True, blank=True)
 

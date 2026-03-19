@@ -8,6 +8,7 @@ from skin_conditions.serializers import (
     SkinConditionSerializer,
     SkinConditionDetailSerializer,
 )
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class SkinConditionNestedViewSet(
@@ -23,7 +24,7 @@ class SkinConditionNestedViewSet(
     """
 
     serializer_class = SkinConditionSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = SkinCondition.objects.all()
     pagination_class = None

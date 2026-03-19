@@ -3,6 +3,7 @@ from rest_framework import mixins, permissions, viewsets
 
 from skin_forms.models import Wound, WoundImage
 from skin_forms.serializers import WoundImageSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class WoundImageNestedViewSet(
@@ -12,7 +13,7 @@ class WoundImageNestedViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = WoundImageSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     queryset = WoundImage.objects.select_related("wound")
     pagination_class = None
 

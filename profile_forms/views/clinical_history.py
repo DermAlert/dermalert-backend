@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from profile_forms.models import ClinicalHistory
 from profile_forms.serializers.clinical_history import ClinicalHistorySerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class ClinicalHistorySingletonViewSet(
@@ -20,7 +21,7 @@ class ClinicalHistorySingletonViewSet(
     """
 
     serializer_class = ClinicalHistorySerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
     queryset = ClinicalHistory.objects.all()
 

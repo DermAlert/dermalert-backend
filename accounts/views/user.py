@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters as drf_filters
 from rest_framework.permissions import AllowAny
 from django_filters import rest_framework as filters
 from django.contrib.auth import get_user_model
@@ -9,8 +9,13 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.select_related("address").all().order_by("id")
+    queryset = (
+        User.objects.select_related("address")
+        .filter(is_deleted=False)
+        .order_by("id")
+    )
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, drf_filters.SearchFilter)
     filterset_class = UserFilter
+    search_fields = ["name", "cpf", "email"]

@@ -13,6 +13,7 @@ from skin_forms.enums.wound import (
     ExudateType,
 )
 from skin_forms.serializers.wound import WoundSerializer, WoundDetailSerializer
+from accounts.permissions import PatientNestedResourcePermission
 
 
 class SkinConditionWoundNestedViewSet(
@@ -22,7 +23,7 @@ class SkinConditionWoundNestedViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = WoundSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     queryset = Wound.objects.select_related("skin_condition")
     pagination_class = None
 

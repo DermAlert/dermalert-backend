@@ -12,6 +12,7 @@ from profile_forms.serializers import (
     MedicineSerializer,
     ChronicDiseaseSerializer,
 )
+from accounts.permissions import ClinicalAccessPermission, PatientNestedResourcePermission
 
 
 class GeneralHealthSingletonViewSet(
@@ -24,7 +25,7 @@ class GeneralHealthSingletonViewSet(
     """
 
     serializer_class = GeneralHealthSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, PatientNestedResourcePermission]
     filter_backends = [DjangoFilterBackend]
 
     def _get_object(self):
@@ -54,6 +55,7 @@ class GeneralHealthSingletonViewSet(
 class AllergyListView(generics.ListAPIView):
     queryset = Allergy.objects.all()
     serializer_class = AllergySerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None
@@ -62,6 +64,7 @@ class AllergyListView(generics.ListAPIView):
 class MedicineListView(generics.ListAPIView):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None
@@ -70,6 +73,7 @@ class MedicineListView(generics.ListAPIView):
 class ChronicDiseaseListView(generics.ListAPIView):
     queryset = ChronicDisease.objects.all()
     serializer_class = ChronicDiseaseSerializer
+    permission_classes = [permissions.IsAuthenticated, ClinicalAccessPermission]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
     pagination_class = None

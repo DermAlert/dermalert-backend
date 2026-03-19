@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block favicon %}
+        <link rel="icon" type="image/png" href="{% static 'drf-yasg/swagger-ui-dist/favicon-32x32.png' %}"/>
+    {% endblock %}
+
+    {% block main_styles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'drf-yasg/style.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'drf-yasg/swagger-ui-dist/swagger-ui.css' %}">
+    {% endblock %}
+    {% block extra_styles %}
+        <style>
+            {% include "drf-yasg/_swagger_auth.css" %}
+        </style>
+    {% endblock %}
+</head>
+
+<body
+    class="swagger-body"
+    data-swagger-login-url="{% url 'auth-login' %}"
+    data-swagger-auth-scheme="Token"
+>
+
+{% block extra_body %}
+    <div id="swagger-login-modal" class="swagger-login-modal hidden" aria-hidden="true">
+        <div class="swagger-login-modal__backdrop" data-swagger-close="true"></div>
+        <div class="swagger-login-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="swagger-login-title">
+            <div class="swagger-login-modal__header">
+                <h2 id="swagger-login-title">Swagger Login</h2>
+                <button type="button" class="swagger-login-modal__close" data-swagger-close="true" aria-label="Close">
+                    x
+                </button>
+            </div>
+            <p class="swagger-login-modal__text">
+                Sign in with CPF and password, or paste an existing token.
+            </p>
+
+            <label class="swagger-login-modal__label" for="swagger-login-cpf">CPF</label>
+            <input id="swagger-login-cpf" class="swagger-login-modal__input" type="text" autocomplete="username" />
+
+            <label class="swagger-login-modal__label" for="swagger-login-password">Password</label>
+            <input
+                id="swagger-login-password"
+                class="swagger-login-modal__input"
+                type="password"
+                autocomplete="current-password"
+            />
+
+            <div class="swagger-login-modal__actions">
+                <button type="button" id="swagger-login-submit" class="swagger-login-modal__primary">
+                    Login
+                </button>
+            </div>
+
+            <div class="swagger-login-modal__divider">or</div>
+
+            <label class="swagger-login-modal__label" for="swagger-login-token">Token</label>
+            <input
+                id="swagger-login-token"
+                class="swagger-login-modal__input"
+                type="text"
+                placeholder="Token abc123 or just abc123"
+                autocomplete="off"
+            />
+
+            <div class="swagger-login-modal__actions">
+                <button type="button" id="swagger-token-submit" class="swagger-login-modal__secondary">
+                    Use Token
+                </button>
+                <button type="button" id="swagger-token-clear" class="swagger-login-modal__secondary">
+                    Clear Token
+                </button>
+            </div>
+
+            <p id="swagger-login-status" class="swagger-login-modal__status" aria-live="polite"></p>
+        </div>
+    </div>
+{% endblock %}
+
+<div id="swagger-ui"></div>
+
+{% block footer %}
+{% endblock %}
+
+<script id="swagger-settings" type="application/json">{{ swagger_settings | safe }}</script>
+<script id="oauth2-config" type="application/json">{{ oauth2_config | safe }}</script>
+
+{% block main_scripts %}
+    <script src="{% static 'drf-yasg/swagger-ui-dist/swagger-ui-bundle.js' %}"></script>
+    <script src="{% static 'drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js' %}"></script>
+    <script src="{% static 'drf-yasg/insQ.min.js' %}"></script>
+    <script src="{% static 'drf-yasg/immutable.min.js' %}"></script>
+    <script src="{% static 'drf-yasg/swagger-ui-init.js' %}"></script>
+{% endblock %}
+{% block extra_scripts %}
+    <script>
+        {% include "drf-yasg/_swagger_auth.js" %}
+    </script>
+{% endblock %}
+
+<a id="oauth2-redirect-url" href="{% static 'drf-yasg/swagger-ui-dist/oauth2-redirect.html' %}" class="hidden"></a>
+</body>
+
+</html>
