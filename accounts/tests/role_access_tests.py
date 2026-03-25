@@ -151,3 +151,100 @@ class TestRoleAccessAPI:
         )
         response = api_client.get(reverse("health-center-list"))
         assert response.status_code == 403
+
+    @pytest.mark.parametrize(
+        "role",
+        [PermissionRole.SUPERVISOR, PermissionRole.TECHNICIAN],
+    )
+    def test_supervisor_and_professional_can_view_own_health_center_detail(
+        self, api_client, user_factory, health_unit_factory, role
+    ):
+        health_unit = health_unit_factory.create()
+
+        self.authenticate(
+            api_client,
+            user_factory,
+            role=role,
+            health_unit=health_unit,
+        )
+        response = api_client.get(
+            reverse("health-center-detail", kwargs={"pk": health_unit.pk})
+        )
+
+        assert response.status_code == 200
+        assert response.data["id"] == health_unit.pk
+
+    @pytest.mark.parametrize(
+        "role",
+        [PermissionRole.SUPERVISOR, PermissionRole.TECHNICIAN],
+    )
+    def test_supervisor_and_professional_can_view_own_health_center_patients(
+        self, api_client, user_factory, patient_factory, health_unit_factory, role
+    ):
+        health_unit = health_unit_factory.create()
+        patient_factory.create(health_unit=health_unit)
+
+        self.authenticate(
+            api_client,
+            user_factory,
+            role=role,
+            health_unit=health_unit,
+        )
+        response = api_client.get(
+            reverse("health-center-patients", kwargs={"pk": health_unit.pk})
+        )
+
+        assert response.status_code == 200
+        assert response.data["count"] == 1
+
+    @pytest.mark.parametrize(
+        "role",
+        [PermissionRole.SUPERVISOR, PermissionRole.TECHNICIAN],
+    )
+    def test_supervisor_and_professional_can_view_own_health_center_professionals(
+        self, api_client, user_factory, health_unit_factory, role
+    ):
+        health_unit = health_unit_factory.create()
+        professional = user_factory.create()
+        Work.objects.create(
+            user=professional,
+            health_unit=health_unit,
+            permission_role=PermissionRole.TECHNICIAN,
+            start_date=date(2026, 1, 1),
+        )
+
+        self.authenticate(
+            api_client,
+            user_factory,
+            role=role,
+            health_unit=health_unit,
+        )
+        response = api_client.get(
+            reverse("health-center-professionals", kwargs={"pk": health_unit.pk})
+        )
+
+        assert response.status_code == 200
+        expected_count = 2 if role == PermissionRole.TECHNICIAN else 1
+        assert response.data["count"] == expected_count
+
+    @pytest.mark.parametrize(
+        "role",
+        [PermissionRole.SUPERVISOR, PermissionRole.TECHNICIAN],
+    )
+    def test_supervisor_and_professional_cannot_view_other_health_center(
+        self, api_client, user_factory, health_unit_factory, role
+    ):
+        accessible_unit = health_unit_factory.create()
+        other_unit = health_unit_factory.create()
+
+        self.authenticate(
+            api_client,
+            user_factory,
+            role=role,
+            health_unit=accessible_unit,
+        )
+        response = api_client.get(
+            reverse("health-center-detail", kwargs={"pk": other_unit.pk})
+        )
+
+        assert response.status_code == 403
