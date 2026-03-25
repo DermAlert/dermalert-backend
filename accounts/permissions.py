@@ -134,6 +134,29 @@ class ManagerOrAdminPermission(BasePermission):
         return bool(roles & {ROLE_ADMIN, ROLE_MANAGER})
 
 
+class HealthUnitViewPermission(BasePermission):
+    manager_actions = {"list", "create", "update", "partial_update", "destroy"}
+    detail_read_actions = {"retrieve", "patients", "professionals"}
+
+    def has_permission(self, request, view):
+        roles = get_user_roles(request.user)
+        if not roles:
+            return False
+
+        action = getattr(view, "action", None)
+        if action in self.manager_actions:
+            allowed = {ROLE_ADMIN, ROLE_MANAGER}
+        elif action in self.detail_read_actions:
+            allowed = {ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERVISOR, ROLE_PROFESSIONAL}
+        else:
+            allowed = {ROLE_ADMIN, ROLE_MANAGER}
+
+        return bool(roles & allowed)
+
+    def has_object_permission(self, request, view, obj):
+        return user_can_access_health_unit(request.user, obj.pk)
+
+
 class PatientViewPermission(BasePermission):
     def has_permission(self, request, view):
         roles = get_user_roles(request.user)

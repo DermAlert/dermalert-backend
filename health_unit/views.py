@@ -4,9 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from accounts.permissions import (
-    ManagerOrAdminPermission,
-    ProfessionalManagementPermission,
-    get_user_managed_health_unit_ids,
+    HealthUnitViewPermission,
 )
 from accounts.serializers.patient import PatientSerializer
 from accounts.serializers.work import ProfessionalAssignmentSerializer
@@ -29,22 +27,11 @@ class HealthUnitViewSet(viewsets.ModelViewSet):
     ordering = ["name"]
 
     def get_permissions(self):
-        if self.action in {"list", "retrieve", "create", "update", "partial_update", "destroy"}:
-            return [permissions.IsAuthenticated(), ManagerOrAdminPermission()]
-        if self.action in {"patients", "professionals"}:
-            return [permissions.IsAuthenticated(), ProfessionalManagementPermission()]
-        return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), HealthUnitViewPermission()]
 
     @action(detail=True, methods=["get"])
     def professionals(self, request, pk=None):
         health_unit = self.get_object()
-        managed_ids = get_user_managed_health_unit_ids(request.user)
-        if managed_ids is not None and health_unit.pk not in managed_ids:
-            return Response(
-                {"detail": "You cannot view professionals for this health unit."},
-                status=403,
-            )
-
         queryset = Work.objects.select_related("user", "health_unit").filter(
             health_unit=health_unit,
             is_deleted=False,
@@ -66,13 +53,6 @@ class HealthUnitViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def patients(self, request, pk=None):
         health_unit = self.get_object()
-        managed_ids = get_user_managed_health_unit_ids(request.user)
-        if managed_ids is not None and health_unit.pk not in managed_ids:
-            return Response(
-                {"detail": "You cannot view patients for this health unit."},
-                status=403,
-            )
-
         queryset = Patient.objects.select_related("user", "health_unit").filter(
             health_unit=health_unit,
             is_deleted=False,
