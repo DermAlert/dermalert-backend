@@ -7,6 +7,7 @@ from accounts.enums.permission_role import PermissionRole
 from accounts.permissions import (
     ProfessionalManagementPermission,
     get_user_managed_health_unit_ids,
+    user_can_manage_health_unit,
 )
 from accounts.serializers.work import (
     ProfessionalAssignmentSerializer,
@@ -51,9 +52,8 @@ class ProfessionalAssignmentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        managed_ids = get_user_managed_health_unit_ids(request.user)
         health_unit = serializer.validated_data["health_unit"]
-        if managed_ids is not None and health_unit.pk not in managed_ids:
+        if not user_can_manage_health_unit(request.user, health_unit.pk):
             raise PermissionDenied("You cannot manage professionals for this health unit.")
 
         try:
@@ -80,9 +80,13 @@ class ProfessionalAssignmentViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    def partial_update(self, request, *args, **kwargs):
+    def _update_assignment(self, request, *args, partial=False, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            instance=instance,
+            data=request.data,
+            partial=partial,
+        )
         serializer.is_valid(raise_exception=True)
 
         candidate_cpf = serializer.validated_data.get("cpf", instance.user.cpf)
@@ -119,6 +123,12 @@ class ProfessionalAssignmentViewSet(viewsets.ModelViewSet):
             ).data
         )
 
+    def update(self, request, *args, **kwargs):
+        return self._update_assignment(request, *args, partial=False, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        return self._update_assignment(request, *args, partial=True, **kwargs)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
@@ -145,9 +155,8 @@ class ManagerViewSet(ProfessionalAssignmentViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        managed_ids = get_user_managed_health_unit_ids(request.user)
         health_unit = serializer.validated_data["health_unit"]
-        if managed_ids is not None and health_unit.pk not in managed_ids:
+        if not user_can_manage_health_unit(request.user, health_unit.pk):
             raise PermissionDenied("You cannot manage professionals for this health unit.")
 
         try:

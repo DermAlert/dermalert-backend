@@ -37,7 +37,7 @@ def user_is_supervisor(user) -> bool:
         permission_role=PermissionRole.SUPERVISOR,
         is_active=True,
         is_deleted=False,
-        ).exists()
+    ).exists()
 
 
 def user_is_professional(user) -> bool:
@@ -95,6 +95,13 @@ def get_user_managed_health_unit_ids(user):
     )
 
 
+def user_can_manage_health_unit(user, health_unit_id) -> bool:
+    managed_ids = get_user_managed_health_unit_ids(user)
+    if managed_ids is None:
+        return True
+    return health_unit_id in managed_ids
+
+
 def user_can_access_health_unit(user, health_unit_id) -> bool:
     if user_is_admin(user) or user_is_manager(user):
         return True
@@ -126,6 +133,12 @@ class ProfessionalManagementPermission(BasePermission):
     def has_permission(self, request, view):
         roles = get_user_roles(request.user)
         return bool(roles & {ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERVISOR})
+
+    def has_object_permission(self, request, view, obj):
+        roles = get_user_roles(request.user)
+        return bool(roles & {ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPERVISOR}) and (
+            user_can_manage_health_unit(request.user, obj.health_unit_id)
+        )
 
 
 class ManagerOrAdminPermission(BasePermission):

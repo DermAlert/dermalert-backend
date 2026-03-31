@@ -2,6 +2,7 @@ from datetime import date
 
 import pytest
 from django.urls import reverse
+from django.test import override_settings
 from pytest_factoryboy import register
 from rest_framework.authtoken.models import Token
 
@@ -126,6 +127,78 @@ class TestRoleAccessAPI:
         )
         response = api_client.get(reverse("professional-list"))
         assert response.status_code == 403
+
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_supervisor_can_manage_professional_alias_crud(
+        self, api_client, user_factory, health_unit_factory
+    ):
+        health_unit = health_unit_factory.create()
+        professional_user = user_factory.create()
+        assignment = Work.objects.create(
+            user=professional_user,
+            health_unit=health_unit,
+            permission_role=PermissionRole.TECHNICIAN,
+            start_date=date(2026, 1, 1),
+        )
+
+        self.authenticate(
+            api_client,
+            user_factory,
+            role=PermissionRole.SUPERVISOR,
+            health_unit=health_unit,
+        )
+
+        list_response = api_client.get(reverse("professional-list"))
+        assert list_response.status_code == 200
+        assert list_response.data["count"] == 1
+
+        create_response = api_client.post(
+            reverse("professional-list"),
+            {
+                "name": "Nova Profissional",
+                "cpf": "52998224725",
+                "email": "nova.profissional@example.com",
+                "health_unit": health_unit.pk,
+            },
+            format="json",
+        )
+        assert create_response.status_code == 201
+
+        detail_url = reverse("professional-detail", kwargs={"pk": assignment.pk})
+
+        retrieve_response = api_client.get(detail_url)
+        assert retrieve_response.status_code == 200
+        assert retrieve_response.data["id"] == assignment.pk
+
+        put_response = api_client.put(
+            detail_url,
+            {
+                "name": "Profissional Atualizada",
+                "cpf": professional_user.cpf,
+                "email": "profissional.atualizada@example.com",
+                "permission_role": PermissionRole.TECHNICIAN,
+                "start_date": "2026-01-15",
+                "end_date": "2026-12-31",
+            },
+            format="json",
+        )
+        assert put_response.status_code == 200
+        assert put_response.data["user"]["name"] == "Profissional Atualizada"
+        assert put_response.data["user"]["email"] == "profissional.atualizada@example.com"
+        assert put_response.data["start_date"] == "2026-01-15"
+
+        patch_response = api_client.patch(
+            detail_url,
+            {
+                "name": "Profissional Parcial",
+            },
+            format="json",
+        )
+        assert patch_response.status_code == 200
+        assert patch_response.data["user"]["name"] == "Profissional Parcial"
+
+        delete_response = api_client.delete(detail_url)
+        assert delete_response.status_code == 204
 
     def test_manager_can_access_health_center_alias_but_professional_cannot(
         self, api_client, user_factory, health_unit_factory
