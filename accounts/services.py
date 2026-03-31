@@ -1,3 +1,4 @@
+import logging
 import hashlib
 import secrets
 from datetime import datetime, time, timedelta
@@ -17,6 +18,7 @@ from accounts.models import InviteWork, Work
 from accounts.validators import normalize_cpf, validate_cpf
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 def build_client_url(template: str, **kwargs) -> str:
@@ -42,6 +44,13 @@ def send_registration_invite_email(invite: InviteWork, raw_token: str) -> str:
         settings.REGISTRATION_INVITE_URL_TEMPLATE,
         token=raw_token,
     )
+    if getattr(settings, "LOG_REGISTRATION_INVITE_TOKENS", settings.DEBUG):
+        logger.warning(
+            "Registration invite token generated for email=%s token=%s url=%s",
+            invite.email,
+            raw_token,
+            invite_url,
+        )
     subject = "Convite para completar seu cadastro"
     text_body = (
         "Voce foi convidado para acessar o DermAlert. "

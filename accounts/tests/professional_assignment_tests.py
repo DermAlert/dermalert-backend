@@ -1,3 +1,4 @@
+import logging
 import re
 
 import pytest
@@ -27,24 +28,30 @@ def extract_token_from_email(body: str) -> str:
 
 @pytest.mark.django_db
 class TestProfessionalAssignmentsAPI:
-    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
-    def test_invites_new_professional(self, api_client, user_factory, health_unit_factory):
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        LOG_REGISTRATION_INVITE_TOKENS=True,
+    )
+    def test_invites_new_professional(
+        self, api_client, user_factory, health_unit_factory, caplog
+    ):
         admin = user_factory.create(is_staff=True)
         token = Token.objects.create(user=admin)
         api_client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
         health_unit = health_unit_factory.create()
 
-        response = api_client.post(
-            reverse("professional-assignment-list"),
-            {
-                "name": "Maria Tecnica",
-                "cpf": "52998224725",
-                "email": "maria@example.com",
-                "health_unit": health_unit.pk,
-                "permission_role": PermissionRole.TECHNICIAN,
-            },
-            format="json",
-        )
+        with caplog.at_level(logging.WARNING, logger="accounts.services"):
+            response = api_client.post(
+                reverse("professional-assignment-list"),
+                {
+                    "name": "Maria Tecnica",
+                    "cpf": "52998224725",
+                    "email": "maria@example.com",
+                    "health_unit": health_unit.pk,
+                    "permission_role": PermissionRole.TECHNICIAN,
+                },
+                format="json",
+            )
 
         assert response.status_code == 201
         assert response.data["status"] == "invited"
@@ -52,6 +59,8 @@ class TestProfessionalAssignmentsAPI:
         assert assignment.is_active is False
         assert InviteWork.objects.filter(user=assignment.user).exists()
         assert len(mail.outbox) == 1
+        raw_token = extract_token_from_email(mail.outbox[0].body)
+        assert raw_token in caplog.text
 
     @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_links_existing_professional(self, api_client, user_factory, health_unit_factory):

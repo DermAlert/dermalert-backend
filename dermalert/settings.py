@@ -238,6 +238,10 @@ REGISTRATION_INVITE_URL_TEMPLATE = os.getenv(
     "REGISTRATION_INVITE_URL_TEMPLATE",
     "http://localhost:3000/complete-registration?token={token}",
 )
+LOG_REGISTRATION_INVITE_TOKENS = os.getenv(
+    "LOG_REGISTRATION_INVITE_TOKENS",
+    "True" if DEBUG else "False",
+).lower() == "true"
 
 
 if not DEBUG and not TESTING:
