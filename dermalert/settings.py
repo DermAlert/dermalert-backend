@@ -232,11 +232,11 @@ DEFAULT_FROM_EMAIL = os.getenv(
 )
 PASSWORD_RESET_URL_TEMPLATE = os.getenv(
     "PASSWORD_RESET_URL_TEMPLATE",
-    "http://localhost:3000/reset-password?uid={uid}&token={token}",
+    "dermalert://reset-password/?uid={uid}&token={token}",
 )
 REGISTRATION_INVITE_URL_TEMPLATE = os.getenv(
     "REGISTRATION_INVITE_URL_TEMPLATE",
-    "http://localhost:3000/complete-registration?token={token}",
+    "dermalert://complete-registration?token={token}",
 )
 LOG_REGISTRATION_INVITE_TOKENS = os.getenv(
     "LOG_REGISTRATION_INVITE_TOKENS",
