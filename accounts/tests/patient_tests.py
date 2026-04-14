@@ -6,6 +6,7 @@ from pytest_factoryboy import register
 from rest_framework.authtoken.models import Token
 from accounts.enums.permission_role import PermissionRole
 from accounts.models import Work
+from accounts.permissions import user_can_access_patient
 from .factories import HealthUnitFactory, PatientFactory, UserFactory
 
 
@@ -200,3 +201,10 @@ class TestPatientAPI:
         patient.refresh_from_db()
         assert patient.is_deleted is True
         assert patient.is_active is False
+
+    def test_user_can_access_patient_returns_false_for_invalid_patient_id(
+        self, user_factory
+    ):
+        professional = user_factory.create()
+
+        assert user_can_access_patient(professional, "null") is False

@@ -110,6 +110,11 @@ def user_can_access_health_unit(user, health_unit_id) -> bool:
 
 
 def user_can_access_patient(user, patient_user_id) -> bool:
+    try:
+        patient_user_id = int(patient_user_id)
+    except (TypeError, ValueError):
+        return False
+
     if user_is_admin(user) or user_is_manager(user):
         return True
 
